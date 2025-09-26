@@ -1,0 +1,16 @@
+{
+  "name": "ghostapp",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "contracts/*"
+  ],
+  "scripts": {
+    "web:dev": "npm run dev --workspace web",
+    "web:lint": "npm run lint --workspace web",
+    "web:build": "npm run build --workspace web",
+    "web:start": "npm run start --workspace web"
+  }
+}
