@@ -1,45 +1,6 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "D:\\GhostApp\\ghostapp\\contracts\\IdentityAnchor.sol": {
-      "lastModificationDate": 1758929644955,
-      "contentHash": "11f94587e4358c667844e4925a6cdcc0",
-      "sourceName": "IdentityAnchor.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/utils/Context.sol",
-        "@openzeppelin/contracts/access/AccessControl.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IdentityAnchor"
-      ]
-    },
     "D:\\GhostApp\\ghostapp\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
       "lastModificationDate": 1758931136144,
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
@@ -224,6 +185,118 @@
       ],
       "artifacts": [
         "IERC165"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\core\\IdentityAnchor.sol": {
+      "lastModificationDate": 1758935695049,
+      "contentHash": "267f896af420aa22e5d120f0196c394e",
+      "sourceName": "contracts/core/IdentityAnchor.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Context.sol",
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "../interfaces/IIdentityAnchor.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IdentityAnchor"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\interfaces\\IIdentityAnchor.sol": {
+      "lastModificationDate": 1758935815130,
+      "contentHash": "50b31cb89baabcb9b08a3991f42010dd",
+      "sourceName": "contracts/interfaces/IIdentityAnchor.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IIdentityAnchor"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\utils\\MerkleVerifier.sol": {
+      "lastModificationDate": 1758935844816,
+      "contentHash": "27ad75edd60278db9b1e5b582af0ec55",
+      "sourceName": "contracts/utils/MerkleVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MerkleVerifier"
       ]
     }
   }

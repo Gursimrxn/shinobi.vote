@@ -33,6 +33,14 @@ declare module "hardhat/types/runtime" {
       name: "IdentityAnchor",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IdentityAnchor__factory>;
+    getContractFactory(
+      name: "IIdentityAnchor",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IIdentityAnchor__factory>;
+    getContractFactory(
+      name: "IdentityAnchor",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IdentityAnchor__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -59,6 +67,16 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IdentityAnchor>;
+    getContractAt(
+      name: "IIdentityAnchor",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IIdentityAnchor>;
+    getContractAt(
+      name: "IdentityAnchor",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IdentityAnchor>;
 
     deployContract(
       name: "AccessControl",
@@ -76,6 +94,14 @@ declare module "hardhat/types/runtime" {
       name: "IERC165",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
+    deployContract(
+      name: "IdentityAnchor",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IdentityAnchor>;
+    deployContract(
+      name: "IIdentityAnchor",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IIdentityAnchor>;
     deployContract(
       name: "IdentityAnchor",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -101,6 +127,16 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
+    deployContract(
+      name: "IdentityAnchor",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IdentityAnchor>;
+    deployContract(
+      name: "IIdentityAnchor",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IIdentityAnchor>;
     deployContract(
       name: "IdentityAnchor",
       args: any[],

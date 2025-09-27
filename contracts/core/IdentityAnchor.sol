@@ -3,13 +3,14 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "../interfaces/IIdentityAnchor.sol";
 
 /**
  * @title IdentityAnchor
  * @notice Anchors zero-knowledge friendly identity commitments on-chain for a decentralized social application.
  * @dev Deployable on the CELO Alfajores testnet. Access control is delegated to the default admin and optional registrar accounts.
  */
-contract IdentityAnchor is AccessControl {
+contract IdentityAnchor is AccessControl, IIdentityAnchor {
     /// @notice Role identifier for trusted registrar accounts.
     bytes32 public constant REGISTRAR_ROLE = keccak256("REGISTRAR_ROLE");
 
@@ -18,23 +19,6 @@ contract IdentityAnchor is AccessControl {
 
     /// @dev Tracks whether a particular commitment hash has been registered to enforce uniqueness across the system.
     mapping(bytes32 => bool) private _registeredCommitments;
-
-    /**
-     * @notice Emitted when a new identity commitment is registered on-chain.
-     * @param user The wallet that now owns the anchored identity commitment.
-     * @param commitment The 32-byte identity commitment that was registered.
-     * @param timestamp The Unix time when the registration occurred.
-     */
-    event IdentityRegistered(address indexed user, bytes32 indexed commitment, uint256 timestamp);
-
-    /**
-     * @notice Emitted when an existing identity commitment is updated.
-     * @param user The wallet that owns the identity commitment.
-     * @param oldCommitment The previous commitment that was replaced.
-     * @param newCommitment The new commitment registered for the wallet.
-     * @param timestamp The Unix time when the update occurred.
-     */
-    event IdentityUpdated(address indexed user, bytes32 indexed oldCommitment, bytes32 indexed newCommitment, uint256 timestamp);
 
     /**
      * @notice Sets up the default admin role on the deployer.
@@ -133,8 +117,8 @@ contract IdentityAnchor is AccessControl {
      * @param user The wallet address to query.
      * @return hasIdentity True if the user has a non-zero commitment anchored.
      */
-    function hasIdentity(address user) external view returns (bool hasIdentity) {
-        hasIdentity = _identityCommitments[user] != bytes32(0);
+    function hasIdentity(address user) external view returns (bool) {
+        return _identityCommitments[user] != bytes32(0);
     }
 
     // ------------------------------------------------------------------------

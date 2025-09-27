@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as openzeppelin from "./@openzeppelin";
 export type { openzeppelin };
+import type * as contracts from "./contracts";
+export type { contracts };
 export type { IdentityAnchor } from "./IdentityAnchor";
 export * as factories from "./factories";
 export type { AccessControl } from "./@openzeppelin/contracts/access/AccessControl";
@@ -13,4 +15,7 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
-export { IdentityAnchor__factory } from "./factories/IdentityAnchor__factory";
+export type { IdentityAnchor } from "./contracts/core/IdentityAnchor";
+export { IdentityAnchor__factory } from "./factories/contracts/core/IdentityAnchor__factory";
+export type { IIdentityAnchor } from "./contracts/interfaces/IIdentityAnchor";
+export { IIdentityAnchor__factory } from "./factories/contracts/interfaces/IIdentityAnchor__factory";
