@@ -14,8 +14,7 @@ export default function Home() {
                     backgroundImage: "url('/illustration.png')",
                 }}
             >
-                    v
-                
+
                 <Navbar />
 
                 {/* Hero Section */}
@@ -40,12 +39,15 @@ export default function Home() {
                         </p>
 
                         {/* CTA Button */}
-                        <button className="bg-black text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center space-x-2 transform hover:scale-105 cursor-pointer">
-                            <span>Submit a Proposal</span>
+                        <Link
+                            href="/signin"
+                            className="bg-black text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center space-x-2 transform hover:scale-105 cursor-pointer"
+                        >
+                            <span>Launch App</span>
                             <span className="transition-transform duration-200">
                                 →
                             </span>
-                        </button>
+                        </Link>
                     </div>
                 </section>
             </div>
@@ -56,17 +58,18 @@ export default function Home() {
             <section
                 className="bg-black h-screen w-full overflow-hidden flex flex-col rounded-b-[40px] justify-between text-white bg-cover bg-bottom bg-no-repeat relative pointer-events-none select-none"
                 style={{
-                    backgroundImage: "url('/section.svg')",
+                    backgroundImage: "url('/map.jpg')",
+                    filter: "invert(1)",
                 }}
             >
-                <Plasma
+                {/* <Plasma
                         color="#ff6b35"
                         speed={0.6}
                         direction="forward"
                         scale={1.1}
                         opacity={0.8}
                         mouseInteractive={true}
-                        />
+                        /> */}
                 <h2 className="text-4xl md:text-6xl font-bold text-white mt-12 leading-tight max-w-4xl mx-auto text-center mix-blend-difference">
                     Ready to turn your knowledge into a two-way street?
                 </h2>

@@ -126,25 +126,29 @@ export default function SelfVerificationComponent({
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-[420px] p-8 ${className}`}>
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100/60 dark:border-white/10">
-        <div className="flex flex-col items-center text-center gap-4">
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 dark:bg-blue-900/40 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-200">
-            <span className="inline-block h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+    <div
+      className={`relative flex min-h-[420px] flex-col items-center justify-center overflow-hidden rounded-[28px] p-10 ${className}`}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(111,78,176,0.22),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,252,244,0.95),rgba(255,107,53,0.08)_45%,rgba(111,78,176,0.12)_100%)]" />
+      <div className="relative w-full max-w-md rounded-3xl border border-[#6f4eb0]/15 bg-[#FFFCF4]/95 p-8 shadow-[0_32px_80px_-40px_rgba(22,20,31,0.55)]">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#f6f1ff] px-4 py-2 text-sm font-medium text-[#6f4eb0] shadow-inner">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-[#ff6b35]"></span>
             Secure login powered by Self Protocol
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-2xl font-bold text-black">
             Verify your identity
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300 max-w-sm">
+          <p className="max-w-sm text-sm text-black/70">
             Scan the code with the Self mobile app to complete a privacy-preserving, zero-knowledge identity check. No passwords, no seed phrases.
           </p>
         </div>
 
         {viewState === 'loading' && (
           <div className="mt-8 flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#6f4eb0]"></div>
+            <p className="text-sm text-black/50">
               Preparing your secure session…
             </p>
           </div>
@@ -159,9 +163,9 @@ export default function SelfVerificationComponent({
                 size={280}
               />
             </div>
-            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-              <div className="rounded-lg bg-gray-50 dark:bg-gray-900/40 px-4 py-3">
-                <p className="font-medium text-gray-800 dark:text-white mb-1">
+            <div className="space-y-3 text-sm text-black/70">
+              <div className="rounded-xl border border-[#6f4eb0]/10 bg-white/70 px-4 py-4">
+                <p className="mb-1 font-medium text-black">
                   How it works
                 </p>
                 <ol className="list-decimal list-inside space-y-1 text-left">
@@ -173,14 +177,14 @@ export default function SelfVerificationComponent({
               <button
                 type="button"
                 onClick={() => window.open(universalLink, '_blank')}
-                className="w-full rounded-lg bg-blue-600 text-white px-4 py-3 text-sm font-medium hover:bg-blue-700 transition"
+                className="w-full rounded-xl bg-gradient-to-r from-[#6f4eb0] via-[#7f5ae4] to-[#ff6b35] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#6f4eb0]/20 transition hover:brightness-105"
               >
                 Open the Self app on this device
               </button>
               <button
                 type="button"
                 onClick={() => window.open('https://self.xyz', '_blank')}
-                className="w-full rounded-lg border border-blue-200 dark:border-blue-800 px-4 py-3 text-sm font-medium text-blue-600 dark:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition"
+                className="w-full rounded-xl border border-[#6f4eb0]/25 px-4 py-3 text-sm font-semibold text-[#6f4eb0] transition hover:bg-[#f6f1ff]"
               >
                 Need the Self app? Download it →
               </button>
@@ -190,17 +194,17 @@ export default function SelfVerificationComponent({
 
         {viewState === 'verified' && verificationData && (
           <div className="mt-8 space-y-6">
-            <div className="flex flex-col items-center gap-3 text-green-600 dark:text-green-400">
+            <div className="flex flex-col items-center gap-3 text-[#15a34a]">
               <div className="text-5xl">🎉</div>
               <h3 className="text-xl font-semibold">
                 Identity verified
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-black/60">
                 You’re good to go—your session is now trusted.
               </p>
             </div>
-            <div className="rounded-xl bg-green-50 dark:bg-green-900/20 px-4 py-4 text-sm text-left text-gray-700 dark:text-gray-200">
-              <p className="font-semibold text-green-700 dark:text-green-300">
+            <div className="rounded-xl border border-[#6f4eb0]/10 bg-[#f6fff6] px-4 py-4 text-left text-sm text-black/70">
+              <p className="font-semibold text-[#0f7a35]">
                 Session summary
               </p>
               <ul className="mt-2 space-y-1 text-xs">
@@ -221,7 +225,7 @@ export default function SelfVerificationComponent({
               <button
                 type="button"
                 onClick={handleRetry}
-                className="w-full rounded-lg border border-blue-200 dark:border-blue-800 px-4 py-3 text-sm font-medium text-blue-600 dark:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition"
+                className="w-full rounded-xl border border-[#6f4eb0]/25 px-4 py-3 text-sm font-semibold text-[#6f4eb0] transition hover:bg-[#f6f1ff]"
               >
                 Verify another identity
               </button>
@@ -232,13 +236,13 @@ export default function SelfVerificationComponent({
         {viewState === 'error' && (
           <div className="mt-8 space-y-6 text-center">
             <div className="text-4xl">⚠️</div>
-            <p className="text-sm text-red-500 dark:text-red-400">
+            <p className="text-sm text-red-500">
               {errorMessage || 'Something went wrong while initializing the verification flow.'}
             </p>
             <button
               type="button"
               onClick={handleRetry}
-              className="w-full rounded-lg bg-blue-600 text-white px-4 py-3 text-sm font-medium hover:bg-blue-700 transition"
+              className="w-full rounded-xl bg-gradient-to-r from-[#6f4eb0] via-[#7f5ae4] to-[#ff6b35] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#6f4eb0]/20 transition hover:brightness-105"
             >
               Try again
             </button>
@@ -246,8 +250,8 @@ export default function SelfVerificationComponent({
         )}
 
         {viewState !== 'verified' && (
-          <p className="mt-8 text-center text-xs text-gray-400 dark:text-gray-500">
-            Powered by zero-knowledge proofs · No wallet signatures · No passwords
+          <p className="mt-8 text-center text-xs uppercase tracking-[0.3em] text-black/40">
+            Zero-knowledge · Passwordless · Relayer-free
           </p>
         )}
       </div>

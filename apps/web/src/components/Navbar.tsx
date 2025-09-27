@@ -1,16 +1,14 @@
 'use client';
 
-import Image from "next/image"
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-    const handleGoogleSignIn = async () => {
-    console.log('Get Started button clicked!');
-    try {
-      // Use default redirect behavior for OAuth flow
-    } catch (error) {
-      console.error('SignIn failed:', error);
-    }
-  };
+    const router = useRouter();
+
+    const handleLaunch = () => {
+        router.push('/signin');
+    };
     return (
         <nav className="relative z-10">
           <div className="max-w-6xl mx-auto px-4 py-4">
@@ -22,7 +20,7 @@ const Navbar = () => {
                 <span className="text-2xl font-bold text-gray-800">Shinobi.vote</span>
               </div>
               <button 
-                onClick={handleGoogleSignIn}
+                onClick={handleLaunch}
                 className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition-colors cursor-pointer"
                 >
                 Launch App
