@@ -8,9 +8,23 @@ import {
   SelfErrorCodes 
 } from '@/types/self';
 
-// Simple in-memory storage for demo purposes
-// In production, use a proper database
-const verificationSessions = new Map<string, SelfVerificationSession>();
+import fs from 'fs';
+import path from 'path';
+
+const SESSIONS_FILE = path.resolve(process.cwd(), 'self_sessions.json');
+
+function readSessions(): Record<string, SelfVerificationSession> {
+  try {
+    const data = fs.readFileSync(SESSIONS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return {};
+  }
+}
+
+function writeSessions(sessions: Record<string, SelfVerificationSession>) {
+  fs.writeFileSync(SESSIONS_FILE, JSON.stringify(sessions));
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,7 +39,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    const session = verificationSessions.get(sessionId);
+  const sessions = readSessions();
+  const session = sessions[sessionId];
     
     if (!session) {
       const response: SelfAPIResponse = {
@@ -42,7 +57,8 @@ export async function GET(request: NextRequest) {
 
     if (timeDiff > SESSION_TIMEOUT) {
       session.status = 'expired';
-      verificationSessions.delete(sessionId);
+  delete sessions[sessionId];
+  writeSessions(sessions);
       
       const response: SelfAPIResponse<CheckVerificationResponse> = {
         success: false,
@@ -72,7 +88,8 @@ export async function GET(request: NextRequest) {
           }
         }
       };
-      verificationSessions.set(sessionId, session);
+      sessions[sessionId] = session;
+      writeSessions(sessions);
     }
 
     const response: SelfAPIResponse<CheckVerificationResponse> = {

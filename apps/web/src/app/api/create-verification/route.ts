@@ -7,20 +7,46 @@ import {
   SelfErrorCodes 
 } from '@/types/self';
 
-// Simple in-memory storage for demo purposes
-// In production, use a proper database with TTL
-const verificationSessions = new Map<string, SelfVerificationSession>();
+import fs from 'fs';
+import path from 'path';
+
+const SESSIONS_FILE = path.resolve(process.cwd(), 'self_sessions.json');
+
+function readSessions(): Record<string, SelfVerificationSession> {
+  try {
+    const data = fs.readFileSync(SESSIONS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return {};
+  }
+}
+
+function writeSessions(sessions: Record<string, SelfVerificationSession>) {
+  fs.writeFileSync(SESSIONS_FILE, JSON.stringify(sessions));
+}
 
 // Cleanup expired sessions periodically
 const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 
 setInterval(() => {
-  const now = new Date();
-  for (const [sessionId, session] of verificationSessions.entries()) {
-    const timeDiff = now.getTime() - session.createdAt.getTime();
-    if (timeDiff > SESSION_TIMEOUT) {
-      verificationSessions.delete(sessionId);
+  try {
+    const sessions = readSessions();
+    const now = Date.now();
+    let mutated = false;
+
+    Object.entries(sessions).forEach(([sessionId, session]) => {
+      const createdAt = new Date(session.createdAt).getTime();
+      if (Number.isFinite(createdAt) && now - createdAt > SESSION_TIMEOUT) {
+        delete sessions[sessionId];
+        mutated = true;
+      }
+    });
+
+    if (mutated) {
+      writeSessions(sessions);
     }
+  } catch (error) {
+    console.error('Failed to clean up Self sessions', error);
   }
 }, 60 * 1000); // Clean up every minute
 
@@ -54,10 +80,12 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    verificationSessions.set(sessionId, session);
+  const sessions = readSessions();
+  sessions[sessionId] = session;
+  writeSessions(sessions);
 
-    // Generate QR code URL
-    const qrCodeUrl = await generateQRCodeUrl(session.qrCodeData);
+  // Generate QR code URL
+  const qrCodeUrl = await generateQRCodeUrl(session.qrCodeData);
 
     const response: SelfAPIResponse<CreateVerificationResponse> = {
       success: true,

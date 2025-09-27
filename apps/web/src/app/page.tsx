@@ -1,7 +1,13 @@
+"use client"
+
 import Image from "next/image";
-import SelfVerificationComponent from "@/components/SelfVerification";
+
+import dynamic from "next/dynamic";
+import { useState } from "react";
+const SelfVerificationComponent = dynamic(() => import("@/components/SelfVerification"), { ssr: false });
 
 export default function Home() {
+  const [showLogin, setShowLogin] = useState(false);
   return (
     <div className="font-sans min-h-screen p-8 pb-20">
       <header className="max-w-4xl mx-auto text-center mb-12">
@@ -67,7 +73,19 @@ export default function Home() {
           </div>
 
           <div>
-            <SelfVerificationComponent />
+            {!showLogin ? (
+              <div className="flex flex-col items-center justify-center h-full">
+                <button
+                  className="px-8 py-4 bg-blue-600 text-white rounded-lg shadow-lg text-xl font-bold hover:bg-blue-700 transition-colors"
+                  onClick={() => setShowLogin(true)}
+                >
+                  Sign In / Launch App
+                </button>
+                <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm">Secure, private, and instant login with Self Protocol</p>
+              </div>
+            ) : (
+              <SelfVerificationComponent />
+            )}
           </div>
         </div>
 
