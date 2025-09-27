@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { lighthouseService } from '@/lib/lighthouse';
-import { FeedResponse } from '@/types';
+import { FeedResponse, PostAsset } from '@/types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,9 +20,11 @@ export async function GET(request: NextRequest) {
     const paginatedPosts = allPosts.slice(startIdx, endIdx);
 
     // Add gateway URLs to assets
+    type AugmentedAsset = PostAsset & { urls: { ipfs: string; gateway: string } };
+
     const postsWithUrls = paginatedPosts.map(post => ({
       ...post,
-      assets: post.assets.map((asset: any) => ({
+      assets: post.assets.map<AugmentedAsset>((asset) => ({
         ...asset,
         urls: lighthouseService.getFileUrls(asset.cid),
       })),

@@ -11,6 +11,9 @@
   "dependencies": {
     "@selfxyz/core": "^1.0.8",
     "@selfxyz/qrcode": "^0.0.19",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.10",
+    "lucide-react": "^0.471.0",
     "motion": "^12.23.22",
     "next": "15.5.4",
     "react": "19.1.0",
@@ -20,7 +23,8 @@
     "ethers": "^6.8.0",
     "keccak": "^3.0.4",
     "axios": "^1.6.2",
-    "formidable": "^3.5.1"
+    "formidable": "^3.5.1",
+    "tailwind-merge": "^2.5.3"
   },
   "devDependencies": {
     "@types/node": "^20",

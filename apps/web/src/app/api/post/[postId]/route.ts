@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { lighthouseService } from '@/lib/lighthouse';
+import { PostAsset } from '@/types';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ postId: string }> }
+  { params }: { params: { postId: string } }
 ) {
   try {
-    const { postId } = await params;
+    const { postId } = params;
 
     if (!postId) {
       return NextResponse.json(
@@ -29,9 +30,11 @@ export async function GET(
     }
 
     // Add gateway URLs to assets
+    type AugmentedAsset = PostAsset & { urls: { ipfs: string; gateway: string } };
+
     const postWithUrls = {
       ...post,
-      assets: post.assets.map((asset: any) => ({
+      assets: post.assets.map<AugmentedAsset>((asset) => ({
         ...asset,
         urls: lighthouseService.getFileUrls(asset.cid),
       })),

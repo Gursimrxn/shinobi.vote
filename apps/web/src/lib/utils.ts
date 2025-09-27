@@ -1,4 +1,6 @@
 import { NextRequest } from 'next/server';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export interface ParsedFile {
   buffer: Buffer;
@@ -99,4 +101,8 @@ export function formatFileSize(bytes: number): string {
  */
 export function generateId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }

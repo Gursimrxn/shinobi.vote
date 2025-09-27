@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-var-requires */
 // Test script for GhostApp Next.js Backend API
 // Run with: node test-api.js
 

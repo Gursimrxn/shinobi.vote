@@ -1,10 +1,9 @@
-import { ethers } from 'ethers';
 import axios from 'axios';
 import { createHash } from 'crypto';
-import { PostMetadata, ContractEvent } from '@/types';
+import { PostMetadata, ContractEvent, Post, PostAsset } from '@/types';
 
 // In-memory storage for posts (replace with database in production)
-export const postsStorage = new Map<string, any>();
+export const postsStorage = new Map<string, Post>();
 let postIdCounter = 1;
 
 export class LighthouseService {
@@ -155,13 +154,14 @@ export class LighthouseService {
     const timestamp = Math.floor(Date.now() / 1000);
     const metaHash = this.computeMetaHash(metadata);
 
-    const assets = cids.map((cid, index) => ({
-      type: mimeTypes ? this.getFileTypeFromMimeType(mimeTypes[index]) : 'document' as const,
+    const assets: PostAsset[] = cids.map((cid, index) => ({
+      type: mimeTypes ? this.getFileTypeFromMimeType(mimeTypes[index]) : 'document',
       cid,
       filename: `asset_${index}`,
+      mimeType: mimeTypes?.[index],
     }));
 
-    const post = {
+    const post: Post = {
       postId,
       author,
       timestamp,
@@ -189,14 +189,14 @@ export class LighthouseService {
   /**
    * Get all posts from storage
    */
-  getAllPosts(): any[] {
+  getAllPosts(): Post[] {
     return Array.from(postsStorage.values()).sort((a, b) => b.timestamp - a.timestamp);
   }
 
   /**
    * Get a specific post by ID
    */
-  getPost(postId: string): any | null {
+  getPost(postId: string): Post | null {
     return postsStorage.get(postId) || null;
   }
 
@@ -218,7 +218,7 @@ export class LighthouseService {
   initializeMockData(): void {
     if (postsStorage.size === 0) {
       // Add some mock posts for testing
-      const mockPost1 = {
+      const mockPost1: Post = {
         postId: '1',
         author: '0x742d35Cc6635C0532925a3b8D9c1C63e3e7B8dE6',
         timestamp: Math.floor(Date.now() / 1000) - 3600,
@@ -227,6 +227,7 @@ export class LighthouseService {
             type: 'image',
             cid: 'QmYourMockCID1',
             filename: 'sample-image.jpg',
+            mimeType: 'image/jpeg',
           },
         ],
         text: 'Welcome to GhostApp! This is a sample post.',
