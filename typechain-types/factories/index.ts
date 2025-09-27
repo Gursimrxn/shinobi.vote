@@ -3,4 +3,3 @@
 /* eslint-disable */
 export * as openzeppelin from "./@openzeppelin";
 export * as contracts from "./contracts";
-export { IdentityAnchor__factory } from "./IdentityAnchor__factory";

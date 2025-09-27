@@ -22,6 +22,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAccessControl__factory>;
     getContractFactory(
+      name: "MerkleProof",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MerkleProof__factory>;
+    getContractFactory(
       name: "ERC165",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC165__factory>;
@@ -34,13 +38,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IdentityAnchor__factory>;
     getContractFactory(
+      name: "MerkleAnchorRegistry",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MerkleAnchorRegistry__factory>;
+    getContractFactory(
       name: "IIdentityAnchor",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IIdentityAnchor__factory>;
     getContractFactory(
-      name: "IdentityAnchor",
+      name: "IMerkleAnchorRegistry",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IdentityAnchor__factory>;
+    ): Promise<Contracts.IMerkleAnchorRegistry__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -52,6 +60,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IAccessControl>;
+    getContractAt(
+      name: "MerkleProof",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MerkleProof>;
     getContractAt(
       name: "ERC165",
       address: string | ethers.Addressable,
@@ -68,15 +81,20 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IdentityAnchor>;
     getContractAt(
+      name: "MerkleAnchorRegistry",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MerkleAnchorRegistry>;
+    getContractAt(
       name: "IIdentityAnchor",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IIdentityAnchor>;
     getContractAt(
-      name: "IdentityAnchor",
+      name: "IMerkleAnchorRegistry",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.IdentityAnchor>;
+    ): Promise<Contracts.IMerkleAnchorRegistry>;
 
     deployContract(
       name: "AccessControl",
@@ -86,6 +104,10 @@ declare module "hardhat/types/runtime" {
       name: "IAccessControl",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IAccessControl>;
+    deployContract(
+      name: "MerkleProof",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MerkleProof>;
     deployContract(
       name: "ERC165",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -99,13 +121,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IdentityAnchor>;
     deployContract(
+      name: "MerkleAnchorRegistry",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MerkleAnchorRegistry>;
+    deployContract(
       name: "IIdentityAnchor",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IIdentityAnchor>;
     deployContract(
-      name: "IdentityAnchor",
+      name: "IMerkleAnchorRegistry",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IdentityAnchor>;
+    ): Promise<Contracts.IMerkleAnchorRegistry>;
 
     deployContract(
       name: "AccessControl",
@@ -117,6 +143,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IAccessControl>;
+    deployContract(
+      name: "MerkleProof",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MerkleProof>;
     deployContract(
       name: "ERC165",
       args: any[],
@@ -133,15 +164,20 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IdentityAnchor>;
     deployContract(
+      name: "MerkleAnchorRegistry",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MerkleAnchorRegistry>;
+    deployContract(
       name: "IIdentityAnchor",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IIdentityAnchor>;
     deployContract(
-      name: "IdentityAnchor",
+      name: "IMerkleAnchorRegistry",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IdentityAnchor>;
+    ): Promise<Contracts.IMerkleAnchorRegistry>;
 
     // default types
     getContractFactory(

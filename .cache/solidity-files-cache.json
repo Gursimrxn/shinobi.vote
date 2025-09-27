@@ -298,6 +298,157 @@
       "artifacts": [
         "MerkleVerifier"
       ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\core\\MerkleAnchorRegistry.sol": {
+      "lastModificationDate": 1758938146833,
+      "contentHash": "18721aadf2ed84803fa3f8445f677c19",
+      "sourceName": "contracts/core/MerkleAnchorRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
+        "@openzeppelin/contracts/utils/Context.sol",
+        "../interfaces/IMerkleAnchorRegistry.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MerkleAnchorRegistry"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\interfaces\\IMerkleAnchorRegistry.sol": {
+      "lastModificationDate": 1758937258563,
+      "contentHash": "7aa75b0c57bc788c51635c387fdfe0cb",
+      "sourceName": "contracts/interfaces/IMerkleAnchorRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IMerkleAnchorRegistry"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\MerkleProof.sol": {
+      "lastModificationDate": 1758931137043,
+      "contentHash": "d57b0dba03e8cc7942bf797fc9fe1d29",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Hashes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MerkleProof"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\Hashes.sol": {
+      "lastModificationDate": 1758931136716,
+      "contentHash": "073b9c3ce7bc358a876ed2b3479db88c",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/Hashes.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Hashes"
+      ]
     }
   }
 }

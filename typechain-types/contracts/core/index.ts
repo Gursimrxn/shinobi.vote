@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { IdentityAnchor } from "./IdentityAnchor";
+export type { MerkleAnchorRegistry } from "./MerkleAnchorRegistry";

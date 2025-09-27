@@ -19,7 +19,8 @@
     "hardhat:lint": "hardhat check"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2"
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/merkle-tree": "^1.0.8"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
@@ -33,7 +34,14 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5"
   },
-  "keywords": ["blockchain", "celo", "identity", "hardhat", "solidity", "zero-knowledge"],
+  "keywords": [
+    "blockchain",
+    "celo",
+    "identity",
+    "hardhat",
+    "solidity",
+    "zero-knowledge"
+  ],
   "author": "",
   "license": "ISC"
 }

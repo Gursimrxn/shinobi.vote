@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { IdentityAnchor__factory } from "./IdentityAnchor__factory";
+export { MerkleAnchorRegistry__factory } from "./MerkleAnchorRegistry__factory";
