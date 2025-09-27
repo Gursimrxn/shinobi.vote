@@ -1025,6 +1025,42 @@
       "artifacts": [
         "IModeratorRegistry"
       ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\core\\PostAnchor.sol": {
+      "lastModificationDate": 1758954928974,
+      "contentHash": "b3a14429e5403f72a9a16e5205922fa1",
+      "sourceName": "contracts/core/PostAnchor.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "PostAnchor"
+      ]
     }
   }
 }

@@ -5,3 +5,4 @@ export type { BadgeNFT } from "./BadgeNFT";
 export type { IdentityAnchor } from "./IdentityAnchor";
 export type { MerkleAnchorRegistry } from "./MerkleAnchorRegistry";
 export type { ModeratorRegistry } from "./ModeratorRegistry";
+export type { PostAnchor } from "./PostAnchor";
