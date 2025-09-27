@@ -1,3 +1,4 @@
+import { Features } from "@/components/Features";
 import Navbar from "@/components/Navbar";
 import { Highlighter } from "@/components/ui/Highlighter";
 import Plasma from "@/components/ui/Plasma";
@@ -48,7 +49,9 @@ export default function Home() {
                     </div>
                 </section>
             </div>
-
+            <div className="items-center justify-center flex flex-col">
+                <Features />
+            </div>
             {/* Section with Background Image */}
             <section
                 className="bg-black h-screen w-full overflow-hidden flex flex-col rounded-b-[40px] justify-between text-white bg-cover bg-bottom bg-no-repeat relative pointer-events-none select-none"
