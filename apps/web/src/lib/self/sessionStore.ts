@@ -1,104 +1,129 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-export type SessionStatus = 'pending' | 'verified' | 'failed';
+export type StoredUserIdType = 'uuid' | 'hex';
 
-export interface StoredSession {
+export interface SelfSession {
   sessionId: string;
   actionId: string;
-  createdAt: string;
-  status: SessionStatus;
+  status: 'pending' | 'verified' | 'failed';
   userAddress?: string;
   userIdentifier?: string;
+  userId?: string;
+  userIdType: StoredUserIdType;
   userDefinedData?: string;
   scope: string;
   endpoint: string;
+  endpointType?: 'https' | 'staging_https' | 'celo' | 'staging_celo';
   devMode: boolean;
+  policy: {
+    minimumAge: number;
+    excludedCountries: string[];
+    ofac: boolean;
+  };
   verification?: {
     attestationId: number;
     proofHash: string;
     identityCommitment: string;
     transactionHashes: {
-      identityAnchor?: string;
-      badgeMint?: string;
-      postAnchor?: string;
+      identityAnchor: string;
+      badgeMint: string;
+      postAnchor: string;
     };
     timestamp: string;
   };
   error?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+interface SessionParams {
+  actionId?: string;
+  userAddress?: string;
+  userId?: string;
+  userIdType?: StoredUserIdType;
+  userDefinedData?: string;
+  scope: string;
+  endpoint: string;
+  endpointType?: 'https' | 'staging_https' | 'celo' | 'staging_celo';
+  devMode: boolean;
   policy: {
-    minimumAge?: number;
-    excludedCountries: string[];
+    minimumAge: number;
+    excludedCountries?: string[];
     ofac: boolean;
   };
 }
 
-const DATA_DIR = path.join(process.cwd(), 'var');
-const SESSIONS_FILE = path.join(DATA_DIR, 'self-sessions.json');
+const SESSIONS_FILE = path.resolve(process.cwd(), 'self_verification_sessions.json');
 
-type SessionDictionary = Record<string, StoredSession>;
-
-async function ensureStorage(): Promise<void> {
+async function readSessions(): Promise<Record<string, SelfSession>> {
   try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error('Failed to ensure storage directory', message);
-    throw error;
-  }
-
-  try {
-    await fs.access(SESSIONS_FILE);
+    const data = await fs.readFile(SESSIONS_FILE, 'utf8');
+    return JSON.parse(data);
   } catch {
-    await fs.writeFile(SESSIONS_FILE, JSON.stringify({}, null, 2), 'utf8');
-  }
-}
-
-async function readSessions(): Promise<SessionDictionary> {
-  await ensureStorage();
-  try {
-    const raw = await fs.readFile(SESSIONS_FILE, 'utf8');
-    if (!raw) {
-      return {};
-    }
-    const parsed = JSON.parse(raw) as SessionDictionary;
-    return parsed;
-  } catch (error) {
-    console.error('Failed to read session storage', error);
     return {};
   }
 }
 
-async function writeSessions(sessions: SessionDictionary): Promise<void> {
-  await ensureStorage();
-  await fs.writeFile(SESSIONS_FILE, JSON.stringify(sessions, null, 2), 'utf8');
+async function writeSessions(sessions: Record<string, SelfSession>): Promise<void> {
+  await fs.writeFile(SESSIONS_FILE, JSON.stringify(sessions, null, 2));
 }
 
-export async function createSession(params: {
-  sessionId: string;
-  actionId: string;
-  userAddress?: string;
-  policy: StoredSession['policy'];
-  scope: string;
-  endpoint: string;
-  devMode: boolean;
-}): Promise<StoredSession> {
+export async function getSession(sessionId: string): Promise<SelfSession | null> {
+  const sessions = await readSessions();
+  return sessions[sessionId] || null;
+}
+
+export async function setSession(session: SelfSession): Promise<void> {
+  const sessions = await readSessions();
+  sessions[session.sessionId] = {
+    ...session,
+    updatedAt: new Date().toISOString(),
+  };
+  await writeSessions(sessions);
+}
+
+export async function updateSession(
+  sessionId: string,
+  updater: (session: SelfSession) => SelfSession
+): Promise<void> {
+  const sessions = await readSessions();
+  const session = sessions[sessionId];
+  if (session) {
+    sessions[sessionId] = {
+      ...updater(session),
+      updatedAt: new Date().toISOString(),
+    };
+    await writeSessions(sessions);
+  }
+}
+
+export async function createSession(
+  sessionId: string,
+  params?: Partial<SessionParams>
+): Promise<SelfSession> {
   const sessions = await readSessions();
 
-  const record: StoredSession = {
-    sessionId: params.sessionId,
-    actionId: params.actionId,
-    createdAt: new Date().toISOString(),
+  const generatedActionId = params?.actionId || `action_${sessionId}`;
+
+  const record: SelfSession = {
+    sessionId,
+    actionId: generatedActionId,
     status: 'pending',
-    userAddress: params.userAddress,
-    scope: params.scope,
-    endpoint: params.endpoint,
-    devMode: params.devMode,
+    userAddress: params?.userAddress,
+    userId: params?.userId || sessionId,
+    userIdType: params?.userIdType || 'uuid',
+    userDefinedData: params?.userDefinedData || generatedActionId,
+    scope: params?.scope || 'Shinobi-verification',
+    endpoint: params?.endpoint || 'https://api.self.xyz/v1',
+    endpointType: params?.endpointType,
+    devMode: params?.devMode || process.env.NEXT_PUBLIC_SELF_DEV_MODE === 'true',
     policy: {
-      minimumAge: params.policy.minimumAge,
-      excludedCountries: params.policy.excludedCountries ?? [],
-      ofac: params.policy.ofac,
+      minimumAge: params?.policy?.minimumAge || 18,
+      excludedCountries: params?.policy?.excludedCountries || [],
+      ofac: params?.policy?.ofac || false,
     },
+    createdAt: new Date().toISOString(),
   };
 
   sessions[record.sessionId] = record;
@@ -107,35 +132,18 @@ export async function createSession(params: {
   return record;
 }
 
-export async function getSession(sessionId: string): Promise<StoredSession | undefined> {
-  const sessions = await readSessions();
-  return sessions[sessionId];
-}
-
-export async function setSession(session: StoredSession): Promise<void> {
-  const sessions = await readSessions();
-  sessions[session.sessionId] = session;
-  await writeSessions(sessions);
-}
-
-export async function updateSession(
-  sessionId: string,
-  updater: (session: StoredSession) => StoredSession
-): Promise<StoredSession | undefined> {
-  const sessions = await readSessions();
-  const existing = sessions[sessionId];
-
-  if (!existing) {
-    return undefined;
-  }
-
-  const updated = updater(existing);
-  sessions[sessionId] = updated;
-  await writeSessions(sessions);
-  return updated;
-}
-
-export async function listSessions(): Promise<StoredSession[]> {
+export async function listSessions(): Promise<SelfSession[]> {
   const sessions = await readSessions();
   return Object.values(sessions);
+}
+
+export async function findSessionByActionId(actionId: string): Promise<SelfSession | null> {
+  if (!actionId) {
+    return null;
+  }
+
+  const sessions = await readSessions();
+  return (
+    Object.values(sessions).find((session) => session.actionId === actionId) || null
+  );
 }

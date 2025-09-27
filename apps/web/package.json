@@ -11,7 +11,7 @@
   "dependencies": {
     "@lighthouse-web3/sdk": "^0.3.1",
     "@selfxyz/core": "^1.0.8",
-    "@selfxyz/qrcode": "^0.0.19",
+    "@selfxyz/qrcode": "1.0.15",
     "axios": "^1.6.2",
     "clsx": "^2.1.1",
     "ethers": "^6.8.0",
@@ -22,8 +22,8 @@
     "motion": "^12.23.22",
     "multer": "^1.4.5-lts.1",
     "next": "15.5.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rough-notation": "^0.5.1",
     "tailwind-merge": "^2.5.3"
   },
@@ -31,11 +31,12 @@
     "@tailwindcss/postcss": "^4",
     "@types/formidable": "^3.4.5",
     "@types/multer": "^1.4.11",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "minimatch": "^10.0.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

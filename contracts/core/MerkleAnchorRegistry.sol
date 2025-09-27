@@ -11,7 +11,7 @@ import "../interfaces/IMerkleAnchorRegistry.sol";
  * @notice A registry for Merkle roots that enables efficient verification of user data commitments.
  * @dev This contract allows users to register Merkle roots and provides functionality to verify proofs against them.
  *      Uses OpenZeppelin's AccessControl for role-based permissions and MerkleProof for verification.
- *      Designed for deployment on CELO Alfajores testnet as part of the GhostApp ecosystem.
+ *      Designed for deployment on CELO Alfajores testnet as part of the Shinobi ecosystem.
  */
 contract MerkleAnchorRegistry is AccessControl, IMerkleAnchorRegistry {
     /// @notice Role identifier for admin accounts that can manage the registry.

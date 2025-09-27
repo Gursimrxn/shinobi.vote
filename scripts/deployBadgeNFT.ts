@@ -71,7 +71,7 @@ async function main() {
 
     console.log("\n📋 Deployment Summary:");
     console.log("=====================================");
-    console.log("Contract Name: GhostApp Badge (GHOST-BADGE)");
+    console.log("Contract Name: Shinobi Badge (GHOST-BADGE)");
     console.log("Contract Address:", contractAddress);
     console.log("Network: CELO Alfajores Testnet");
     console.log("Deployer:", deployer.address);
@@ -97,7 +97,7 @@ async function main() {
     console.log("\n📚 Next steps:");
     console.log("1. Verify the contract on CeloScan if needed");
     console.log("2. Grant MINTER_ROLE to moderators/relayers");
-    console.log("3. Integrate with GhostApp frontend");
+    console.log("3. Integrate with Shinobi frontend");
     console.log("4. Test badge minting with IPFS/Filecoin metadata");
     
     return {

@@ -1,65 +1,60 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ethers } from 'ethers';
-import {
-  SelfBackendVerifier,
-  AllIds,
-  InMemoryConfigStore,
-  type VerificationConfig,
-  type AttestationId,
-} from '@selfxyz/core';
+import { SelfBackendVerifier, DefaultConfigStore, AllIds } from '@selfxyz/core';
 
 import {
   getSession,
   setSession,
   updateSession,
+  createSession,
 } from '@/lib/self/sessionStore';
+
 import {
   registerIdentityForUser,
   mintVerificationBadge,
   anchorVerificationPost,
 } from '@/lib/contracts/client';
 
-interface ProofPayload {
-  a: [string, string];
-  b: [[string, string], [string, string]];
-  c: [string, string];
-}
+// Initialize SelfBackendVerifier
+const SCOPE = process.env.NEXT_PUBLIC_SELF_SCOPE || 'Shinobi-verification';
+const ENDPOINT = process.env.NEXT_PUBLIC_SELF_ENDPOINT || 'https://api.self.xyz/v1';
+const MOCK_PASSPORT = process.env.NEXT_PUBLIC_SELF_DEV_MODE === 'true';
+const ALLOWED_IDS = AllIds;
+const CONFIG = {
+  minimumAge: 18,
+  excludedCountries: [],
+  ofac: false,
+};
+const configStorage = new DefaultConfigStore(CONFIG);
+const USER_IDENTIFIER_TYPE = 'uuid';
+
+const verifier = new SelfBackendVerifier(
+  SCOPE,
+  ENDPOINT,
+  MOCK_PASSPORT,
+  ALLOWED_IDS,
+  configStorage,
+  USER_IDENTIFIER_TYPE
+);
 
 interface VerificationCallbackBody {
   sessionId?: string;
   actionId?: string;
   attestationId?: number;
-  proof?: ProofPayload;
+  proof?: any;
   pubSignals?: string[];
   userContextData?: string;
-}
-
-function isProofPayload(value: unknown): value is ProofPayload {
-  if (!value || typeof value !== 'object') {
-    return false;
-  }
-
-  const candidate = value as ProofPayload;
-  return (
-    Array.isArray(candidate.a) &&
-    Array.isArray(candidate.b) &&
-    Array.isArray(candidate.c) &&
-    candidate.a.length === 2 &&
-    candidate.b.length === 2 &&
-    candidate.b[0]?.length === 2 &&
-    candidate.b[1]?.length === 2 &&
-    candidate.c.length === 2
-  );
+  // Additional fields that Self Protocol might send
+  userIdentifier?: string;
+  verified?: boolean;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as VerificationCallbackBody;
+    console.log('[self][verify] Received verification callback:', body);
+
     const sessionId = body.sessionId;
-    const attestationId = body.attestationId;
-    const proof = body.proof;
-    const pubSignals = body.pubSignals;
-    const userContextData = body.userContextData;
 
     if (!sessionId || typeof sessionId !== 'string') {
       return NextResponse.json(
@@ -68,119 +63,86 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (typeof attestationId !== 'number' || (attestationId !== 1 && attestationId !== 2)) {
-      return NextResponse.json(
-        { success: false, error: 'attestationId must be 1 or 2' },
-        { status: 400 }
-      );
-    }
-
-    if (!isProofPayload(proof)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid proof payload' },
-        { status: 400 }
-      );
-    }
-
-    if (!Array.isArray(pubSignals) || pubSignals.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'pubSignals array is required' },
-        { status: 400 }
-      );
-    }
-
-    if (!userContextData || typeof userContextData !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'userContextData is required' },
-        { status: 400 }
-      );
-    }
-
-    const session = await getSession(sessionId);
-
+    // Get or create session
+    let session = await getSession(sessionId);
+    
     if (!session) {
-      return NextResponse.json(
-        { success: false, error: 'Session not found' },
-        { status: 404 }
-      );
+      // Create a new session if it doesn't exist
+      session = await createSession(sessionId);
     }
 
     if (session.status === 'verified') {
-      return NextResponse.json({ success: true, message: 'Session already verified' });
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Session already verified',
+        verified: true 
+      });
     }
 
-    if (body.actionId && body.actionId !== session.actionId) {
+    // Verify proof using SelfBackendVerifier
+    if (!body.attestationId || !body.proof || !body.pubSignals || !body.userContextData) {
       return NextResponse.json(
-        { success: false, error: 'Action mismatch' },
+        { success: false, error: 'Missing required verification fields' },
         { status: 400 }
       );
     }
 
-    const configStore = new InMemoryConfigStore(async () => session.actionId);
-
-    const verificationConfig: VerificationConfig = {
-      minimumAge: session.policy.minimumAge,
-      excludedCountries: session.policy.excludedCountries as VerificationConfig['excludedCountries'],
-      ofac: session.policy.ofac,
-    };
-
-    await configStore.setConfig(session.actionId, verificationConfig);
-
-    const verifier = new SelfBackendVerifier(
-      session.scope,
-      session.endpoint,
-      session.devMode,
-      AllIds,
-      configStore,
-      'hex'
-    );
-
     const verificationResult = await verifier.verify(
-      attestationId as AttestationId,
-      proof,
-      pubSignals,
-      userContextData
+      body.attestationId as 1 | 2,
+      body.proof,
+      body.pubSignals,
+      body.userContextData
     );
+
+    if (!verificationResult.isValidDetails.isValid) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid verification proof' },
+        { status: 400 }
+      );
+    }
 
     const userIdentifier = verificationResult.userData.userIdentifier;
     const commitment = ethers.keccak256(
-      userIdentifier.startsWith('0x')
-        ? userIdentifier
-        : ethers.toUtf8Bytes(userIdentifier)
+      ethers.toUtf8Bytes(userIdentifier)
     );
 
+    // Derive user address from commitment
     const targetAddress = deriveTargetAddress(session.userAddress, commitment);
 
-    const proofHash = ethers.keccak256(
-      ethers.toUtf8Bytes(
-        JSON.stringify({ proof, pubSignals, userContextData })
-      )
-    );
-
+    // Register identity with blockchain
     const identityOutcome = await registerIdentityForUser(targetAddress, commitment);
-
+    
+    // Mint a verification badge
     const badgeTxHash = await mintVerificationBadge(targetAddress);
 
+    // Anchor verification post to blockchain
     const cidHash = ethers.keccak256(
       ethers.toUtf8Bytes(`${sessionId}:${userIdentifier}:${Date.now()}`)
     );
     const metaHash = ethers.keccak256(
-      ethers.toUtf8Bytes(JSON.stringify({ sessionId, attestationId }))
+      ethers.toUtf8Bytes(JSON.stringify({ sessionId, attestationId: body.attestationId }))
     );
 
     const postTxHash = await anchorVerificationPost(cidHash, metaHash);
 
     const verificationRecord = {
-      attestationId,
-      proofHash,
+      attestationId: verificationResult.attestationId,
+      proofHash: verificationResult.discloseOutput.nullifier,
       identityCommitment: commitment,
+      selfVerificationData: {
+        nullifier: verificationResult.discloseOutput.nullifier,
+        issuingState: verificationResult.discloseOutput.issuingState,
+        nationality: verificationResult.discloseOutput.nationality,
+        minimumAge: verificationResult.discloseOutput.minimumAge,
+        isValidDetails: verificationResult.isValidDetails,
+      },
       transactionHashes: {
         identityAnchor: identityOutcome.txHash,
-        badgeMint: badgeTxHash,
-        postAnchor: postTxHash,
+        badgeMint: badgeTxHash || '0x' + '0'.repeat(64),
+        postAnchor: postTxHash || '0x' + '0'.repeat(64),
       },
       timestamp: new Date().toISOString(),
-    } as const;
+    };
 
     session.status = 'verified';
     session.userIdentifier = userIdentifier;
@@ -189,8 +151,11 @@ export async function POST(request: NextRequest) {
 
     await setSession(session);
 
+    console.log('[self][verify] Session verified successfully:', sessionId);
+
     return NextResponse.json({
       success: true,
+      verified: true,
       session: {
         sessionId,
         status: session.status,
@@ -198,13 +163,14 @@ export async function POST(request: NextRequest) {
         verification: verificationRecord,
         alreadyRegistered: identityOutcome.alreadyRegistered,
       },
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'ngrok-skip-browser-warning': 'true',
+      },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('[self][verify][POST] Verification failed', error);
-
-    if (error instanceof Error && 'sessionId' in (error as unknown as Record<string, unknown>)) {
-      // no-op placeholder for typed guards
-    }
 
     const sessionId = await extractSessionIdSafely(request);
     if (sessionId) {
@@ -215,12 +181,36 @@ export async function POST(request: NextRequest) {
       }));
     }
 
+    // Handle SelfBackendVerifier specific errors
+    if (error.name === 'ConfigMismatchError') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Configuration validation failed',
+          details: error.issues,
+        },
+        { 
+          status: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
         error: error instanceof Error ? error.message : 'Verification failed',
       },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'ngrok-skip-browser-warning': 'true',
+        },
+      }
     );
   }
 }
@@ -255,4 +245,17 @@ function deriveTargetAddress(userAddress: string | undefined, commitment: string
 
 function byteLengthSafe(startIndex: number): number {
   return startIndex >= 0 ? startIndex : 0;
+}
+
+// Add OPTIONS handler for CORS
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, ngrok-skip-browser-warning',
+      'ngrok-skip-browser-warning': 'true',
+    },
+  });
 }

@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
 
 /**
  * @title BadgeNFT
- * @notice Manages on-chain collectible badges for GhostApp users, representing verification achievements or activity milestones.
+ * @notice Manages on-chain collectible badges for Shinobi users, representing verification achievements or activity milestones.
  * @dev ERC-721 compliant NFT contract with role-based minting. Designed for CELO Alfajores testnet deployment.
  * Each badge contains metadata stored on Filecoin/IPFS, providing visual proof of verification or participation.
  */
@@ -33,7 +33,7 @@ contract BadgeNFT is ERC721, AccessControl {
      * @notice Initializes the BadgeNFT contract with ERC-721 metadata and access control.
      * @dev Sets up the deployer as the default admin with full access control privileges.
      */
-    constructor() ERC721("GhostApp Badge", "GHOST-BADGE") {
+    constructor() ERC721("Shinobi Badge", "GHOST-BADGE") {
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         // Start token IDs from 1 instead of 0 for better UX
         _tokenIdCounter = 1;

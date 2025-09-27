@@ -11,7 +11,7 @@ export default function Home() {
             <div
                 className="min-h-screen bg-cover bg-center bg-no-repeat relative"
                 style={{
-                    backgroundImage: "url('/illustration.png')",
+                    backgroundImage: "url('/map.jpg')",
                 }}
             >
 

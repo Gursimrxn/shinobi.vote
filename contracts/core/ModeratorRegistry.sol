@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
 
 /**
  * @title ModeratorRegistry
- * @notice Manages moderators and task attestations for GhostApp
+ * @notice Manages moderators and task attestations for Shinobi
  * @dev Allows moderators to opt-in, claim tasks, and resolve tasks with attestation hashes
  */
 contract ModeratorRegistry is AccessControl {

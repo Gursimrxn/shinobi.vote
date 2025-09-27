@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import SelfQRcodeWrapper, { SelfApp, SelfAppBuilder } from '@selfxyz/qrcode';
-import { Wallet } from 'ethers';
+import React, { useState, useEffect } from 'react';
+import {SelfQRcodeWrapper, SelfApp, SelfAppBuilder } from '@selfxyz/qrcode';
 
 import { getSelfFrontendConfig } from '@/config/self';
 import {
@@ -16,27 +15,38 @@ interface BuildResult {
   app: SelfApp;
   universalLink: string;
   userAddress: string;
+  websocketUrl: string;
 }
 
 const buildSelfApp = (): BuildResult => {
   const config = getSelfFrontendConfig();
-  const wallet = Wallet.createRandom();
+  const userId =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
   const sessionSeed =
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : `session_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
+  // Self Protocol requires HTTPS endpoints accessible from mobile
+  // For development, we need to use a tunnel or Self's demo API
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const endpoint = isDevelopment 
+    ? 'https://api.self.xyz/v1' // Use Self's demo API for development
+    : `${process.env.NEXT_PUBLIC_APP_URL}/api/self/verify`;
+
   const app = new SelfAppBuilder({
     appName: config.appName,
     header: config.header,
     logoBase64: config.logo,
-    endpoint: config.endpoint,
-    endpointType: config.endpointType,
+    endpoint: endpoint,
+    endpointType: 'https' as const,
     scope: config.scope,
     sessionId: sessionSeed,
-    userId: wallet.address,
-    userIdType: 'hex',
-    devMode: config.devMode,
+    userId: userId,
+    userIdType: 'uuid',
+    devMode: true,
     disclosures: {
       minimumAge: config.minimumAge,
       nationality: config.requireNationality,
@@ -51,7 +61,8 @@ const buildSelfApp = (): BuildResult => {
   return {
     app,
     universalLink,
-    userAddress: wallet.address,
+    userAddress: userId,
+    websocketUrl: config.websocketUrl,
   };
 };
 
@@ -65,13 +76,15 @@ export default function SelfVerificationComponent({
   const [universalLink, setUniversalLink] = useState<string>('');
   const [userAddress, setUserAddress] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [websocketUrl, setWebsocketUrl] = useState<string>('');
 
   useEffect(() => {
     try {
-      const { app, universalLink, userAddress } = buildSelfApp();
+      const { app, universalLink, userAddress, websocketUrl } = buildSelfApp();
       setSelfApp(app);
       setUniversalLink(universalLink);
       setUserAddress(userAddress);
+      setWebsocketUrl(websocketUrl);
       setViewState('ready');
     } catch (error) {
       console.error('Failed to initialize Self App', error);
@@ -81,12 +94,11 @@ export default function SelfVerificationComponent({
     }
   }, [onVerificationError]);
 
-  const verificationData: SelfVerificationData | null = useMemo(() => {
-    if (viewState !== 'verified' || !userAddress) {
-      return null;
-    }
-
-    return {
+  const handleSuccess = (data?: any) => {
+    console.log('Self verification success:', data);
+    
+    // Create verification data based on current state
+    const verificationData: SelfVerificationData = {
       verified: true,
       identity: {
         id: userAddress,
@@ -94,28 +106,41 @@ export default function SelfVerificationComponent({
         attributes: {
           verification_level: 'high',
           age_over_18: true,
+          ...(data || {}),
         },
       },
     };
-  }, [viewState, userAddress]);
 
-  useEffect(() => {
-    if (verificationData) {
-      onVerificationComplete?.(verificationData);
-    }
-  }, [verificationData, onVerificationComplete]);
-
-  const handleSuccess = () => {
     setViewState('verified');
+    onVerificationComplete?.(verificationData);
+  };
+
+  const handleError = (error: any) => {
+    console.error('Self verification error:', error);
+    console.log('Error details:', JSON.stringify(error, null, 2));
+    
+    let errorMsg = 'Verification failed';
+    if (error?.reason && error.reason.includes('DOCTYPE')) {
+      errorMsg = 'Network configuration issue - using fallback';
+    } else if (error?.error_code === 'UNKNOWN_ERROR') {
+      errorMsg = 'Self service temporarily unavailable';
+    } else if (error?.message) {
+      errorMsg = error.message;
+    }
+    
+    setErrorMessage(errorMsg);
+    setViewState('error');
+    onVerificationError?.(errorMsg);
   };
 
   const handleRetry = () => {
     try {
       setViewState('loading');
-      const { app, universalLink, userAddress } = buildSelfApp();
+      const { app, universalLink, userAddress, websocketUrl } = buildSelfApp();
       setSelfApp(app);
       setUniversalLink(universalLink);
       setUserAddress(userAddress);
+      setWebsocketUrl(websocketUrl);
       setErrorMessage('');
       setViewState('ready');
     } catch (error) {
@@ -160,6 +185,9 @@ export default function SelfVerificationComponent({
               <SelfQRcodeWrapper
                 selfApp={selfApp}
                 onSuccess={handleSuccess}
+                onError={handleError}
+                websocketUrl={websocketUrl}
+                type="websocket"
                 size={280}
               />
             </div>
@@ -171,7 +199,7 @@ export default function SelfVerificationComponent({
                 <ol className="list-decimal list-inside space-y-1 text-left">
                   <li>Open the Self mobile app</li>
                   <li>Scan the QR code and approve the request</li>
-                  <li>Come back—GhostApp unlocks instantly</li>
+                  <li>Come back—Shinobi unlocks instantly</li>
                 </ol>
               </div>
               <button
@@ -188,11 +216,20 @@ export default function SelfVerificationComponent({
               >
                 Need the Self app? Download it →
               </button>
+              {process.env.NODE_ENV === 'development' && (
+                <button
+                  type="button"
+                  onClick={() => handleSuccess({ test_mode: true })}
+                  className="w-full rounded-xl bg-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-300"
+                >
+                  🧪 Test Mode: Skip Verification
+                </button>
+              )}
             </div>
           </div>
         )}
 
-        {viewState === 'verified' && verificationData && (
+        {viewState === 'verified' && (
           <div className="mt-8 space-y-6">
             <div className="flex flex-col items-center gap-3 text-[#15a34a]">
               <div className="text-5xl">🎉</div>
@@ -200,7 +237,7 @@ export default function SelfVerificationComponent({
                 Identity verified
               </h3>
               <p className="text-sm text-black/60">
-                You’re good to go—your session is now trusted.
+                You're good to go—your session is now trusted.
               </p>
             </div>
             <div className="rounded-xl border border-[#6f4eb0]/10 bg-[#f6fff6] px-4 py-4 text-left text-sm text-black/70">
@@ -209,15 +246,14 @@ export default function SelfVerificationComponent({
               </p>
               <ul className="mt-2 space-y-1 text-xs">
                 <li>
-                  <span className="font-medium">Identity:</span> {verificationData.identity.id}
+                  <span className="font-medium">Identity:</span> {userAddress.slice(0, 8)}...
                 </li>
                 <li>
                   <span className="font-medium">Verified at:</span>{' '}
-                  {new Date(verificationData.identity.verified_at).toLocaleString()}
+                  {new Date().toLocaleString()}
                 </li>
                 <li>
-                  <span className="font-medium">Verification level:</span>{' '}
-                  {verificationData.identity.attributes.verification_level}
+                  <span className="font-medium">Verification level:</span> high
                 </li>
               </ul>
             </div>
@@ -239,13 +275,24 @@ export default function SelfVerificationComponent({
             <p className="text-sm text-red-500">
               {errorMessage || 'Something went wrong while initializing the verification flow.'}
             </p>
-            <button
-              type="button"
-              onClick={handleRetry}
-              className="w-full rounded-xl bg-gradient-to-r from-[#6f4eb0] via-[#7f5ae4] to-[#ff6b35] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#6f4eb0]/20 transition hover:brightness-105"
-            >
-              Try again
-            </button>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="w-full rounded-xl bg-gradient-to-r from-[#6f4eb0] via-[#7f5ae4] to-[#ff6b35] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#6f4eb0]/20 transition hover:brightness-105"
+              >
+                Try again
+              </button>
+              {process.env.NODE_ENV === 'development' && (
+                <button
+                  type="button"
+                  onClick={() => handleSuccess({ bypass: true })}
+                  className="w-full rounded-xl bg-green-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-600"
+                >
+                  🚀 Skip & Continue (Dev Mode)
+                </button>
+              )}
+            </div>
           </div>
         )}
 

@@ -18,11 +18,15 @@ export async function POST(request: NextRequest) {
 
     const sessionId = randomUUID();
     const actionId = randomUUID();
+    const userIdType: 'uuid' | 'hex' = 'uuid';
+    const userId = sessionId;
 
-    await createSession({
-      sessionId,
+    await createSession(sessionId, {
       actionId,
       userAddress: walletAddress,
+      userId,
+      userIdType,
+      userDefinedData: actionId,
       policy: {
         minimumAge: config.minimumAge,
         excludedCountries: [],
@@ -30,6 +34,7 @@ export async function POST(request: NextRequest) {
       },
       scope: config.scope,
       endpoint: config.endpoint,
+      endpointType: config.endpointType,
       devMode: config.devMode,
     });
 
@@ -39,8 +44,18 @@ export async function POST(request: NextRequest) {
         sessionId,
         actionId,
         userAddress: walletAddress,
-        userId: walletAddress,
-        userIdType: 'hex',
+        userId,
+        userIdType,
+        userDefinedData: actionId,
+        endpoint: config.endpoint,
+        endpointType: config.endpointType,
+        scope: config.scope,
+        devMode: config.devMode,
+        policy: {
+          minimumAge: config.minimumAge,
+          excludedCountries: [],
+          ofac: false,
+        },
       },
     });
   } catch (error) {

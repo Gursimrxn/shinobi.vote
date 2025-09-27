@@ -34,7 +34,7 @@ describe("BadgeNFT", function () {
 
     describe("Deployment", function () {
         it("Should set the correct name and symbol", async function () {
-            expect(await badgeNFT.name()).to.equal("GhostApp Badge");
+            expect(await badgeNFT.name()).to.equal("Shinobi Badge");
             expect(await badgeNFT.symbol()).to.equal("GHOST-BADGE");
         });
 

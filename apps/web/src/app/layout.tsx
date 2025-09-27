@@ -17,7 +17,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Skill Sensai - Master Your Skills",
+  title: "Shinobi - Master Your Skills",
   description: "Personalized skill assessment and learning platform",
 };
 

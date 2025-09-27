@@ -4,7 +4,7 @@ export async function GET() {
   return NextResponse.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
-    service: 'GhostApp Next.js Backend',
+    service: 'Shinobi Next.js Backend',
     version: '1.0.0',
     lighthouse: process.env.LIGHTHOUSE_API_KEY ? '✅ Configured' : '❌ Missing API Key',
     endpoints: {

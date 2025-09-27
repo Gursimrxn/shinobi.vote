@@ -230,7 +230,7 @@ export class LighthouseService {
             mimeType: 'image/jpeg',
           },
         ],
-        text: 'Welcome to GhostApp! This is a sample post.',
+        text: 'Welcome to Shinobi! This is a sample post.',
         metaHash: '0xabcdef123456789',
         metadata: {
           title: 'Welcome Post',

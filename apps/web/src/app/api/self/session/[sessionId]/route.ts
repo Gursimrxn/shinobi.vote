@@ -3,14 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/self/sessionStore';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     sessionId: string;
-  };
+  }>;
 }
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
   try {
-    const { sessionId } = params;
+    const { sessionId } = await params;
 
     if (!sessionId) {
       return NextResponse.json(

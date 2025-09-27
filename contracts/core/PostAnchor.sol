@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
  * @title PostAnchor
  * @notice Lightweight contract for anchoring social media posts on-chain without storing data
  * @dev Emits events only - no state storage for maximum gas efficiency
- * @author GhostApp Team
+ * @author Shinobi Team
  * 
  * This contract provides immutable proof of content existence for decentralized social platforms.
  * Content is stored on Filecoin/IPFS, while only cryptographic hashes are recorded on-chain

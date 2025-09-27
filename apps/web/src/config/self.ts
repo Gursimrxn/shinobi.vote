@@ -10,6 +10,7 @@ export interface SelfFrontendConfig {
   requireNationality: boolean;
   requireGender: boolean;
   redirectUrl: string;
+  websocketUrl: string;
 }
 
 const DEFAULT_LOGO =
@@ -40,31 +41,37 @@ function parseEndpointType(
     case 'staging_celo':
       return value;
     default:
-      return 'staging_https';
+      return 'https';
   }
 }
 
 export function getSelfFrontendConfig(): SelfFrontendConfig {
+  const endpointType = parseEndpointType(
+    process.env.NEXT_PUBLIC_SELF_ENDPOINT_TYPE?.trim()
+  );
+  const endpoint =
+    process.env.NEXT_PUBLIC_SELF_ENDPOINT?.trim() ||
+    'https://api.self.xyz';
+  const isStaging =
+    endpointType === 'staging_https' ||
+    endpointType === 'staging_celo' ||
+    endpoint.includes('staging');
+
   return {
     appName:
-      process.env.NEXT_PUBLIC_SELF_APP_NAME?.trim() || 'GhostApp Identity',
+      process.env.NEXT_PUBLIC_SELF_APP_NAME?.trim() || 'Shinobi Identity',
     header:
       process.env.NEXT_PUBLIC_SELF_HEADER?.trim() ||
       'Verify your identity with Self',
     scope:
-      process.env.NEXT_PUBLIC_SELF_SCOPE?.trim() ||
-      'ghostapp-verification',
-    endpoint:
-      process.env.NEXT_PUBLIC_SELF_ENDPOINT?.trim() ||
-      'https://api.staging.self.xyz',
-    endpointType: parseEndpointType(
-      process.env.NEXT_PUBLIC_SELF_ENDPOINT_TYPE?.trim()
-    ),
+      process.env.NEXT_PUBLIC_SELF_SCOPE?.trim() || 'Shinobi-verification',
+    endpoint,
+    endpointType,
     logo:
       process.env.NEXT_PUBLIC_SELF_LOGO?.trim() || DEFAULT_LOGO,
     devMode: parseBoolean(
       process.env.NEXT_PUBLIC_SELF_DEV_MODE?.trim(),
-      true
+      false
     ),
     minimumAge: parseNumber(
       process.env.NEXT_PUBLIC_SELF_MINIMUM_AGE?.trim(),
@@ -81,5 +88,10 @@ export function getSelfFrontendConfig(): SelfFrontendConfig {
     redirectUrl:
       process.env.NEXT_PUBLIC_SELF_REDIRECT_URL?.trim() ||
       'https://redirect.self.xyz',
+    websocketUrl:
+      process.env.NEXT_PUBLIC_SELF_WEBSOCKET_URL?.trim() ||
+      (isStaging
+        ? 'wss://websocket.staging.self.xyz'
+        : 'wss://websocket.self.xyz'),
   };
 }
