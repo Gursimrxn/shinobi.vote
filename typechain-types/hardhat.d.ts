@@ -86,6 +86,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ModeratorRegistry__factory>;
     getContractFactory(
+      name: "PostAnchor",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PostAnchor__factory>;
+    getContractFactory(
       name: "IBadgeNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IBadgeNFT__factory>;
@@ -193,6 +197,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ModeratorRegistry>;
     getContractAt(
+      name: "PostAnchor",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PostAnchor>;
+    getContractAt(
       name: "IBadgeNFT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -286,6 +295,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ModeratorRegistry>;
     deployContract(
+      name: "PostAnchor",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PostAnchor>;
+    deployContract(
       name: "IBadgeNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IBadgeNFT>;
@@ -392,6 +405,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ModeratorRegistry>;
+    deployContract(
+      name: "PostAnchor",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PostAnchor>;
     deployContract(
       name: "IBadgeNFT",
       args: any[],

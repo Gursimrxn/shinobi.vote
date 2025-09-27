@@ -42,6 +42,8 @@ export type { MerkleAnchorRegistry } from "./contracts/core/MerkleAnchorRegistry
 export { MerkleAnchorRegistry__factory } from "./factories/contracts/core/MerkleAnchorRegistry__factory";
 export type { ModeratorRegistry } from "./contracts/core/ModeratorRegistry";
 export { ModeratorRegistry__factory } from "./factories/contracts/core/ModeratorRegistry__factory";
+export type { PostAnchor } from "./contracts/core/PostAnchor";
+export { PostAnchor__factory } from "./factories/contracts/core/PostAnchor__factory";
 export type { IBadgeNFT } from "./contracts/interfaces/IBadgeNFT";
 export { IBadgeNFT__factory } from "./factories/contracts/interfaces/IBadgeNFT__factory";
 export type { IIdentityAnchor } from "./contracts/interfaces/IIdentityAnchor";

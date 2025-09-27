@@ -5,3 +5,4 @@ export { BadgeNFT__factory } from "./BadgeNFT__factory";
 export { IdentityAnchor__factory } from "./IdentityAnchor__factory";
 export { MerkleAnchorRegistry__factory } from "./MerkleAnchorRegistry__factory";
 export { ModeratorRegistry__factory } from "./ModeratorRegistry__factory";
+export { PostAnchor__factory } from "./PostAnchor__factory";
