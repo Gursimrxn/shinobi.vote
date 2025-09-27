@@ -82,6 +82,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MerkleAnchorRegistry__factory>;
     getContractFactory(
+      name: "ModeratorRegistry",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ModeratorRegistry__factory>;
+    getContractFactory(
       name: "IBadgeNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IBadgeNFT__factory>;
@@ -93,6 +97,10 @@ declare module "hardhat/types/runtime" {
       name: "IMerkleAnchorRegistry",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IMerkleAnchorRegistry__factory>;
+    getContractFactory(
+      name: "IModeratorRegistry",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IModeratorRegistry__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -180,6 +188,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.MerkleAnchorRegistry>;
     getContractAt(
+      name: "ModeratorRegistry",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ModeratorRegistry>;
+    getContractAt(
       name: "IBadgeNFT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -194,6 +207,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IMerkleAnchorRegistry>;
+    getContractAt(
+      name: "IModeratorRegistry",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IModeratorRegistry>;
 
     deployContract(
       name: "AccessControl",
@@ -264,6 +282,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MerkleAnchorRegistry>;
     deployContract(
+      name: "ModeratorRegistry",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ModeratorRegistry>;
+    deployContract(
       name: "IBadgeNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IBadgeNFT>;
@@ -275,6 +297,10 @@ declare module "hardhat/types/runtime" {
       name: "IMerkleAnchorRegistry",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IMerkleAnchorRegistry>;
+    deployContract(
+      name: "IModeratorRegistry",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IModeratorRegistry>;
 
     deployContract(
       name: "AccessControl",
@@ -362,6 +388,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MerkleAnchorRegistry>;
     deployContract(
+      name: "ModeratorRegistry",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ModeratorRegistry>;
+    deployContract(
       name: "IBadgeNFT",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -376,6 +407,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IMerkleAnchorRegistry>;
+    deployContract(
+      name: "IModeratorRegistry",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IModeratorRegistry>;
 
     // default types
     getContractFactory(

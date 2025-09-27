@@ -4,3 +4,4 @@
 export { IBadgeNFT__factory } from "./IBadgeNFT__factory";
 export { IIdentityAnchor__factory } from "./IIdentityAnchor__factory";
 export { IMerkleAnchorRegistry__factory } from "./IMerkleAnchorRegistry__factory";
+export { IModeratorRegistry__factory } from "./IModeratorRegistry__factory";
