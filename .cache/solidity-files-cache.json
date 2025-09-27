@@ -950,6 +950,81 @@
       "artifacts": [
         "IBadgeNFT"
       ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\core\\ModeratorRegistry.sol": {
+      "lastModificationDate": 1758942330822,
+      "contentHash": "0c3e1668119a524b1df6cd1121290667",
+      "sourceName": "contracts/core/ModeratorRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ModeratorRegistry"
+      ]
+    },
+    "D:\\GhostApp\\ghostapp\\contracts\\interfaces\\IModeratorRegistry.sol": {
+      "lastModificationDate": 1758942345436,
+      "contentHash": "5792d383ab37bf26977478b937539086",
+      "sourceName": "contracts/interfaces/IModeratorRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IModeratorRegistry"
+      ]
     }
   }
 }

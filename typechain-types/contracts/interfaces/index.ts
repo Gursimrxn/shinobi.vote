@@ -4,3 +4,4 @@
 export type { IBadgeNFT } from "./IBadgeNFT";
 export type { IIdentityAnchor } from "./IIdentityAnchor";
 export type { IMerkleAnchorRegistry } from "./IMerkleAnchorRegistry";
+export type { IModeratorRegistry } from "./IModeratorRegistry";
