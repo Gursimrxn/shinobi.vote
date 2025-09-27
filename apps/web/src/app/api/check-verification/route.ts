@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { 
   SelfVerificationSession, 
   SelfAPIResponse, 
-  CheckVerificationResponse,
-  SelfVerificationData,
-  SelfVerificationError,
-  SelfErrorCodes 
+  CheckVerificationResponse
 } from '@/types/self';
 
 import fs from 'fs';
@@ -16,7 +13,19 @@ const SESSIONS_FILE = path.resolve(process.cwd(), 'self_sessions.json');
 function readSessions(): Record<string, SelfVerificationSession> {
   try {
     const data = fs.readFileSync(SESSIONS_FILE, 'utf8');
-    return JSON.parse(data);
+    const raw = JSON.parse(data) as Record<string, SelfVerificationSession>;
+    // Rehydrate date fields (non-mutating clone not necessary for simple usage)
+    Object.values(raw).forEach((s) => {
+      const created = s.createdAt as unknown as string | Date | undefined;
+      if (created && typeof created === 'string') {
+        s.createdAt = new Date(created);
+      }
+      const completed = s.completedAt as unknown as string | Date | undefined;
+      if (completed && typeof completed === 'string') {
+        s.completedAt = new Date(completed);
+      }
+    });
+    return raw;
   } catch {
     return {};
   }
@@ -52,7 +61,8 @@ export async function GET(request: NextRequest) {
 
     // Check for session timeout
     const now = new Date();
-    const timeDiff = now.getTime() - session.createdAt.getTime();
+  const createdAt = session.createdAt instanceof Date ? session.createdAt : new Date(session.createdAt);
+  const timeDiff = now.getTime() - createdAt.getTime();
     const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 
     if (timeDiff > SESSION_TIMEOUT) {

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { 
   SelfVerificationSession, 
   SelfAPIResponse, 
@@ -50,7 +50,7 @@ setInterval(() => {
   }
 }, 60 * 1000); // Clean up every minute
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const sessionId = `self_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
@@ -114,7 +114,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function generateQRCodeUrl(qrData: any): Promise<string> {
+interface QRCodeDataShape {
+  sessionId: string;
+  endpoint: string;
+  appName: string;
+  scope: string;
+}
+
+async function generateQRCodeUrl(qrData: QRCodeDataShape): Promise<string> {
   try {
     const qrCodeSvg = `
       <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
@@ -147,7 +154,7 @@ async function generateQRCodeUrl(qrData: any): Promise<string> {
     throw new SelfVerificationError(
       'Failed to generate QR code',
       SelfErrorCodes.QR_GENERATION_FAILED,
-      error
+      error instanceof Error ? { message: error.message } : undefined
     );
   }
 }

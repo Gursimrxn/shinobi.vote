@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import Plasma from "@/components/ui/Plasma";
 import { ProgressiveBlur } from "@/components/ui/ProgressiveBlur";
 import Link from "next/link";
 
@@ -11,6 +12,8 @@ export default function Home() {
                     backgroundImage: "url('/illustration.png')",
                 }}
             >
+                    v
+                
                 <Navbar />
 
                 {/* Hero Section */}
@@ -18,21 +21,24 @@ export default function Home() {
                     <div className="max-w-6xl mx-auto px-4 text-center">
                         {/* Tagline */}
                         <div className="inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm mb-8">
-                            The Smarter Way to Level Up — Together
+                            The Real Way to Connect — Forever
                         </div>
 
                         {/* Main Heading */}
                         <h1 className="text-4xl md:text-6xl font-bold text-black mb-6 leading-tight">
                             Social media is fake.
                             <br />
-                            <span className="text-orange-700">GhostApp</span> is Fixing it.
+                            <span className="text-orange-700">GhostApp</span> is
+                            Fixing it.
                         </h1>
 
                         {/* Description */}
                         <p className="text-lg md:text-xl text-black mb-8 max-w-4xl mx-auto">
-                            Ghost isn't another network. It's the only space where every account is provably human, 
+                            Ghost isn&apos;t another network. It&apos;s the only
+                            space where every account is provably human,
                             <br />
-                            every post is yours forever, and no one can silence you.
+                            every post is yours forever, and no one can silence
+                            you.
                         </p>
 
                         {/* CTA Button */}
@@ -53,6 +59,14 @@ export default function Home() {
                     backgroundImage: "url('/section.svg')",
                 }}
             >
+                <Plasma
+                        color="#ff6b35"
+                        speed={0.6}
+                        direction="forward"
+                        scale={1.1}
+                        opacity={0.8}
+                        mouseInteractive={true}
+                        />
                 <h2 className="text-4xl md:text-6xl font-bold text-white mt-12 leading-tight max-w-4xl mx-auto text-center mix-blend-difference">
                     Ready to turn your knowledge into a two-way street?
                 </h2>

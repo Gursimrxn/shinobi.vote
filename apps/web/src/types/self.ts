@@ -25,12 +25,13 @@ export interface SelfVerificationData {
       age_over_18?: boolean;
       country?: string;
       verification_level?: 'low' | 'medium' | 'high';
-      [key: string]: any;
+      // Additional dynamic attributes from Self protocol or future extensions
+      [key: string]: unknown;
     };
   };
 }
 
-export interface SelfAPIResponse<T = any> {
+export interface SelfAPIResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -61,7 +62,7 @@ export class SelfVerificationError extends Error {
   constructor(
     message: string,
     public code: string,
-    public details?: any
+    public details?: unknown
   ) {
     super(message);
     this.name = 'SelfVerificationError';

@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[self][verify][POST] Verification failed', error);
 
-    if (error instanceof Error && 'sessionId' in (error as any)) {
+    if (error instanceof Error && 'sessionId' in (error as unknown as Record<string, unknown>)) {
       // no-op placeholder for typed guards
     }
 
