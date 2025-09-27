@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    domains: ["gateway.lighthouse.storage"],
     remotePatterns: [
       {
         protocol: "https",
@@ -10,6 +11,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "assets.aceternity.com",
+      },
+      {
+        protocol: "https",
+        hostname: "gateway.lighthouse.storage",
+        pathname: "/ipfs/**",
       },
     ],
   },

@@ -17,9 +17,9 @@ const Navbar = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center">
-                  <Image src="/logo.png" alt="logo" width={96} height={96} className="scale-[2]" />
+                  <Image src="/logo.png" alt="logo" width={96} height={96} className="" />
                 </div>
-                <span className="text-2xl font-bold text-gray-800">GhostApp</span>
+                <span className="text-2xl font-bold text-gray-800">Shinobi.vote</span>
               </div>
               <button 
                 onClick={handleGoogleSignIn}

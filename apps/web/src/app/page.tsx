@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import { Highlighter } from "@/components/ui/Highlighter";
 import Plasma from "@/components/ui/Plasma";
 import { ProgressiveBlur } from "@/components/ui/ProgressiveBlur";
 import Link from "next/link";
@@ -21,29 +22,25 @@ export default function Home() {
                     <div className="max-w-6xl mx-auto px-4 text-center">
                         {/* Tagline */}
                         <div className="inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm mb-8">
-                            The Real Way to Connect — Forever
+                            Private. Anonymous. Verified.
                         </div>
 
                         {/* Main Heading */}
                         <h1 className="text-4xl md:text-6xl font-bold text-black mb-6 leading-tight">
-                            Social media is fake.
+                            Voting is <Highlighter action="underline" color="#FF9800"> private. </Highlighter>
                             <br />
-                            <span className="text-orange-700">GhostApp</span> is
-                            Fixing it.
+                            <Highlighter action="highlight" color="#FF9800">Shinobi</Highlighter> makes it real.
                         </h1>
 
                         {/* Description */}
                         <p className="text-lg md:text-xl text-black mb-8 max-w-4xl mx-auto">
-                            Ghost isn&apos;t another network. It&apos;s the only
-                            space where every account is provably human,
+                            India’s first privacy-first DAO: anonymous, verifiable, and unstoppable governance powered by zero-knowledge proofs.
                             <br />
-                            every post is yours forever, and no one can silence
-                            you.
                         </p>
 
                         {/* CTA Button */}
                         <button className="bg-black text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center space-x-2 transform hover:scale-105 cursor-pointer">
-                            <span>Learn Something New</span>
+                            <span>Submit a Proposal</span>
                             <span className="transition-transform duration-200">
                                 →
                             </span>
@@ -96,6 +93,15 @@ export default function Home() {
                         </svg>
                     </div>
                     <div className="flex flex-wrap gap-x-2 gap-y-1 text-base text-center justify-center md:justify-end">
+                        <Link
+                            href="https://github.com/kannusingh"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-purple-700 transition-colors break-all"
+                        >
+                            Karandeep Singh
+                        </Link>
+                        <span className="hidden md:inline">|</span>
                         <Link
                             href="https://github.com/gursimrxn"
                             target="_blank"
