@@ -41,7 +41,7 @@ interface VerificationCallbackBody {
   sessionId?: string;
   actionId?: string;
   attestationId?: number;
-  proof?: any;
+  proof?: Record<string, unknown>;
   pubSignals?: string[];
   userContextData?: string;
   // Additional fields that Self Protocol might send
@@ -89,7 +89,8 @@ export async function POST(request: NextRequest) {
 
     const verificationResult = await verifier.verify(
       body.attestationId as 1 | 2,
-      body.proof,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body.proof as any,
       body.pubSignals,
       body.userContextData
     );
@@ -169,7 +170,7 @@ export async function POST(request: NextRequest) {
         'ngrok-skip-browser-warning': 'true',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[self][verify][POST] Verification failed', error);
 
     const sessionId = await extractSessionIdSafely(request);
@@ -182,12 +183,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle SelfBackendVerifier specific errors
-    if (error.name === 'ConfigMismatchError') {
+    if (error instanceof Error && error.name === 'ConfigMismatchError') {
+      const configError = error as Error & { issues?: unknown };
       return NextResponse.json(
         {
           success: false,
           error: 'Configuration validation failed',
-          details: error.issues,
+          details: configError.issues,
         },
         { 
           status: 400,

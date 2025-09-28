@@ -73,7 +73,7 @@ export async function registerIdentityForUser(
 ): Promise<{ txHash: string; alreadyRegistered: boolean }> {
   try {
     const client = getContractsClient();
-    const { identityAnchor, config } = client;
+    const { identityAnchor } = client;
     
     // Check if identity already exists
     const hasIdentity = await identityAnchor.hasIdentity(targetAddress);
