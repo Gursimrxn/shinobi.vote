@@ -2,7 +2,7 @@
   "name": "shinobi.vote",
   "private": true,
   "version": "0.0.1",
-  "description": "Ghost App - A decentralized social application with identity anchoring on CELO",
+  "description": "Anonymous DAO voting platform with gasless transactions",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -12,29 +12,23 @@
     "web:lint": "npm run lint --workspace web",
     "web:build": "npm run build --workspace web",
     "web:start": "npm run start --workspace web",
-    "hardhat:build": "hardhat compile",
-    "hardhat:test": "hardhat test",
-    "hardhat:clean": "hardhat clean",
-    "hardhat:deploy:alfajores": "hardhat run scripts/deploy.ts --network alfajores",
-    "hardhat:lint": "hardhat check"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/merkle-tree": "^1.0.8",
-    "ogl": "^1.0.11"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@types/chai": "^4.3.0",
-    "@types/dotenv": "^6.1.1",
-    "@types/node": "^20.12.7",
-    "chai": "^4.4.1",
-    "dotenv": "^16.6.1",
-    "hardhat": "^2.19.4",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.4.5"
+    "turbo": "^1.10.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
   },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.6.0",
   "keywords": [
     "blockchain",
     "celo",
@@ -43,6 +37,5 @@
     "solidity",
     "zero-knowledge"
   ],
-  "author": "",
   "license": "ISC"
 }
