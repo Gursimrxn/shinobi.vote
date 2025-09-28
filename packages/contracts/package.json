@@ -1,0 +1,36 @@
+{
+  "name": "@shinobi/contracts",
+  "description": "Shinobi.vote contracts",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "author": {
+    "name": "shinobi.vote"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.14",
+    "hardhat": "^2.24.1",
+    "hardhat-spdx-license-identifier": "^2.3.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-solidity": "^2.0.0"
+  },
+  "dependencies": {
+    "@account-abstraction/contracts": "0.7.0",
+    "@nomicfoundation/hardhat-ignition": "0.15.11",
+    "@openzeppelin/contracts": "^5.4.0",
+    "@semaphore-protocol/contracts": "4.8.2",
+    "@semaphore-protocol/core": "4.11.1",
+    "@zk-kit/lean-imt.sol": "^2.0.1",
+    "poseidon-solidity": "0.0.5",
+    "dotenv": "^16.5.0",
+    "permissionless": "0.2.0",
+    "poseidon-lite": "^0.3.0",
+    "viem": "^2.37.8"
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,ts,json,sol,md}\"",
+    "check-format": "prettier --check \"**/*.{js,ts,json,sol,md}\"",
+    "test:dao": "npx hardhat run scripts/test-dao-actions.ts --network localhost",
+    "test:dao:sepolia": "npx hardhat run scripts/test-dao-actions.ts --network baseSepolia"
+  }
+}

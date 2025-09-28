@@ -1,0 +1,8 @@
+{
+  "base-sepolia": {
+    "DAO": {
+      "address": "0xb57095A7CaA0e2af4ec6ad0cB4a54aDC4da8a658",
+      "startBlock": 31619602
+    }
+  }
+}
