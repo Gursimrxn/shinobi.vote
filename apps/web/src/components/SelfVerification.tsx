@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {SelfQRcodeWrapper, SelfApp, SelfAppBuilder } from '@selfxyz/qrcode';
-
+import { SelfQRcodeWrapper, SelfApp, SelfAppBuilder } from '@selfxyz/qrcode';
 import { getSelfFrontendConfig } from '@/config/self';
 import {
-  SelfVerificationData,
-  SelfVerificationComponentProps,
+SelfVerificationData,
+SelfVerificationComponentProps,
 } from '@/types/self';
 
 type ViewState = 'loading' | 'ready' | 'verified' | 'error';
@@ -94,7 +93,7 @@ export default function SelfVerificationComponent({
     }
   }, [onVerificationError]);
 
-  const handleSuccess = (data?: any) => {
+  const handleSuccess = (data?: Record<string, unknown>) => {
     console.log('Self verification success:', data);
     
     // Create verification data based on current state
@@ -115,16 +114,30 @@ export default function SelfVerificationComponent({
     onVerificationComplete?.(verificationData);
   };
 
-  const handleError = (error: any) => {
+  const handleError = (error: unknown) => {
     console.error('Self verification error:', error);
     console.log('Error details:', JSON.stringify(error, null, 2));
     
     let errorMsg = 'Verification failed';
-    if (error?.reason && error.reason.includes('DOCTYPE')) {
-      errorMsg = 'Network configuration issue - using fallback';
-    } else if (error?.error_code === 'UNKNOWN_ERROR') {
-      errorMsg = 'Self service temporarily unavailable';
-    } else if (error?.message) {
+    
+    // Type guard for error with reason property
+    if (typeof error === 'object' && error !== null && 'reason' in error) {
+      const reasonError = error as { reason: string };
+      if (reasonError.reason && reasonError.reason.includes('DOCTYPE')) {
+        errorMsg = 'Network configuration issue - using fallback';
+      }
+    }
+    
+    // Type guard for error with error_code property
+    if (typeof error === 'object' && error !== null && 'error_code' in error) {
+      const codeError = error as { error_code: string };
+      if (codeError.error_code === 'UNKNOWN_ERROR') {
+        errorMsg = 'Self service temporarily unavailable';
+      }
+    }
+    
+    // Type guard for Error instances
+    if (error instanceof Error && error.message) {
       errorMsg = error.message;
     }
     
@@ -237,7 +250,7 @@ export default function SelfVerificationComponent({
                 Identity verified
               </h3>
               <p className="text-sm text-black/60">
-                You're good to go—your session is now trusted.
+                You&apos;re good to go—your session is now trusted.
               </p>
             </div>
             <div className="rounded-xl border border-[#6f4eb0]/10 bg-[#f6fff6] px-4 py-4 text-left text-sm text-black/70">

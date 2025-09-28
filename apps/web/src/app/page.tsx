@@ -1,7 +1,7 @@
 import { Features } from "@/components/Features";
 import Navbar from "@/components/Navbar";
 import { Highlighter } from "@/components/ui/Highlighter";
-import Plasma from "@/components/ui/Plasma";
+
 import { ProgressiveBlur } from "@/components/ui/ProgressiveBlur";
 import Link from "next/link";
 
