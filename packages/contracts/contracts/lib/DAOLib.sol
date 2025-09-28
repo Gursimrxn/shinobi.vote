@@ -73,7 +73,9 @@ library DAOLib {
      * @return optionIndex The vote option index
      * @return voteData The vote data including proof
      */
-    function decodeVoteData(bytes memory data)
+    function decodeVoteData(
+        bytes memory data
+    )
         internal
         pure
         returns (

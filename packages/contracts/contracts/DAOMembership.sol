@@ -28,7 +28,7 @@ abstract contract DAOMembership is Ownable, IDAO, DAOState {
         // Mark as member
         members[msg.sender] = true;
         memberCommitments[msg.sender] = identityCommitment;
-        
+
         // Add to internal membership tree
         _insertMember(identityCommitment);
 
@@ -49,7 +49,9 @@ abstract contract DAOMembership is Ownable, IDAO, DAOState {
      * @param account The member address
      * @return The identity commitment of the member
      */
-    function getMemberCommitment(address account) public view returns (uint256) {
+    function getMemberCommitment(
+        address account
+    ) public view returns (uint256) {
         require(members[account], "DAO: Not a member");
         return memberCommitments[account];
     }

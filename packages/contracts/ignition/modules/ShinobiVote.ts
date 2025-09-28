@@ -6,10 +6,9 @@ const ENTRYPOINT_V7 = '0x0000000071727De22E5E9d8BAf0edAc6f37da032';
 const SEMAPHORE_VERIFIER = '0x6C42599435B82121794D835263C846384869502d';
 const POSEIDON_T3 = '0xB43122Ecb241DD50062641f089876679fd06599a';
 
-
 const ShinobiVoteModule = buildModule('ShinobiVoteModule', (m) => {
   // Parameters that can be overridden during deployment
- const entryPoint = m.getParameter('entryPoint', ENTRYPOINT_V7);
+  const entryPoint = m.getParameter('entryPoint', ENTRYPOINT_V7);
   const semaphoreVerifier = m.getParameter('semaphoreVerifier', SEMAPHORE_VERIFIER);
 
   const poseidonT3 = m.contractAt('PoseidonT3', POSEIDON_T3);
@@ -17,22 +16,17 @@ const ShinobiVoteModule = buildModule('ShinobiVoteModule', (m) => {
   const owner = m.getParameter('owner', m.getAccount(0));
 
   // Deploy DAO with membership verifier
-  const shinobiDAO = m.contract('DAO', [
-      semaphoreVerifier,
-      owner
-    ],
-    {
-      libraries: {
-        PoseidonT3: poseidonT3,
-      },
-    }
-  );
+  const shinobiDAO = m.contract('DAO', [semaphoreVerifier, owner], {
+    libraries: {
+      PoseidonT3: poseidonT3,
+    },
+  });
 
   // Deploy VotingPaymaster with DAO and verifier references
   const votingPaymaster = m.contract('VotingPaymaster', [
     entryPoint,
     shinobiDAO,
-    semaphoreVerifier
+    semaphoreVerifier,
   ]);
 
   // Add initial deposit to paymaster (0.1 ETH)
@@ -41,11 +35,11 @@ const ShinobiVoteModule = buildModule('ShinobiVoteModule', (m) => {
     value: initialDeposit,
   });
 
-  return { 
+  return {
     // Deployed contracts (only contract futures are returned to match IgnitionModuleResult<string>)
-    shinobiDAO, 
+    shinobiDAO,
     votingPaymaster,
-    poseidonT3
+    poseidonT3,
   };
 });
 

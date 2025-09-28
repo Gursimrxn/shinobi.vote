@@ -18,7 +18,11 @@ interface IDAOState {
      * @param identityCommitment The identity commitment of the new member
      * @param newRoot The new root after insertion
      */
-    event MemberAdded(uint256 indexed memberIndex, uint256 identityCommitment, uint256 newRoot);
+    event MemberAdded(
+        uint256 indexed memberIndex,
+        uint256 identityCommitment,
+        uint256 newRoot
+    );
 
     /*///////////////////////////////////////////////////////////////
                                 ERRORS

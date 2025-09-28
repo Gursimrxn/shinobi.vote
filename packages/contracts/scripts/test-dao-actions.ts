@@ -26,7 +26,7 @@ interface TestState {
 
 // ============ UTILITY FUNCTIONS ============
 async function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function generateTestIdentity(seed: string): Identity {
@@ -37,23 +37,24 @@ function generateTestIdentity(seed: string): Identity {
 async function deployDAO(wallet: WalletClient): Promise<any> {
   console.log('🚀 Deploying DAO contract...');
 
-  const dao = await hre.viem.deployContract('DAO', [
-    CONFIG.SEMAPHORE_VERIFIER,
-    wallet.account.address, // owner
-  ], {
-    libraries: {
-      'poseidon-solidity/PoseidonT3.sol:PoseidonT3': CONFIG.POSEIDON_T3,
-    },
-  });
+  const dao = await hre.viem.deployContract(
+    'DAO',
+    [
+      CONFIG.SEMAPHORE_VERIFIER,
+      wallet.account.address, // owner
+    ],
+    {
+      libraries: {
+        'poseidon-solidity/PoseidonT3.sol:PoseidonT3': CONFIG.POSEIDON_T3,
+      },
+    }
+  );
 
   console.log(`   ✅ DAO deployed at: ${dao.address}`);
   return dao;
 }
 
-async function testMemberJoining(
-  dao: any,
-  testState: TestState
-): Promise<WalletClient[]> {
+async function testMemberJoining(dao: any, testState: TestState): Promise<WalletClient[]> {
   console.log('\n=== Testing Member Joining ===');
 
   // Get wallet client and create test identity
@@ -72,7 +73,7 @@ async function testMemberJoining(
 
   const treeSize = await dao.read.currentTreeSize();
   console.log(`   ✅ Member added successfully (Tree size: ${treeSize})`);
-  
+
   return [wallet1];
 }
 
@@ -92,19 +93,15 @@ async function testProposalCreation(
   };
 
   console.log('📝 Creating proposal...');
-  await dao.write.createProposal([
-    proposal.title,
-    proposal.description,
-    proposal.options,
-    proposal.duration,
-  ], { account: wallet.account });
+  await dao.write.createProposal(
+    [proposal.title, proposal.description, proposal.options, proposal.duration],
+    { account: wallet.account }
+  );
 
   await delay(CONFIG.DELAY_MS);
 
   // Store proposal for voting
-  testState.proposals = [
-    { id: 0, title: proposal.title, options: proposal.options },
-  ];
+  testState.proposals = [{ id: 0, title: proposal.title, options: proposal.options }];
 
   const proposalCount = await dao.read.proposalCount();
   console.log(`   ✅ Proposal created successfully (Total: ${proposalCount})`);
@@ -146,9 +143,9 @@ async function castAnonymousVote(
   merkleRootIndex: number
 ): Promise<void> {
   console.log(`   🔬 Generating ZK proof...`);
-  
+
   const proofStartTime = Date.now();
-  
+
   // Generate the Semaphore proof
   const proof = await generateProof(
     voterIdentity,
@@ -159,9 +156,9 @@ async function castAnonymousVote(
 
   const proofEndTime = Date.now();
   const proofGenerationTime = proofEndTime - proofStartTime;
-  
+
   console.log(`   ✅ Proof generated (${proofGenerationTime}ms)`);
-  
+
   // Prepare vote data structure
   const voteData = {
     proof: {
@@ -178,11 +175,7 @@ async function castAnonymousVote(
   };
 
   // Cast the vote
-  const txHash = await dao.write.vote([
-    BigInt(proposalId),
-    BigInt(optionIndex),
-    voteData,
-  ]);
+  const txHash = await dao.write.vote([BigInt(proposalId), BigInt(optionIndex), voteData]);
 
   console.log(`   ✅ Vote cast successfully!`);
   await delay(CONFIG.DELAY_MS);
@@ -193,7 +186,7 @@ async function displayVoteResults(dao: any, testState: TestState): Promise<void>
 
   for (const proposal of testState.proposals) {
     const votes = await dao.read.getProposalVotes([BigInt(proposal.id)]);
-    
+
     console.log(`📊 "${proposal.title}"`);
     for (let i = 0; i < proposal.options.length; i++) {
       console.log(`   ${proposal.options[i]}: ${votes[i]} votes`);
@@ -244,7 +237,6 @@ async function runDAOTests(): Promise<void> {
     console.log(`   ✅ Proposal created and ready for voting`);
     console.log(`   ✅ Anonymous vote cast with ZK proof verification`);
     console.log(`   ✅ Vote recorded without revealing voter identity`);
-
   } catch (error) {
     console.error('❌ Test failed:', error);
     process.exit(1);

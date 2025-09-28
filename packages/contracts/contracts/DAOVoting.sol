@@ -10,9 +10,9 @@ abstract contract DAOVoting is DAOProposals, ReentrancyGuard {
     mapping(uint256 => mapping(uint256 => uint256)) internal proposalVotes; // proposalId => optionIndex => voteCount
     mapping(uint256 => bool) public nullifierHashes; // prevent double voting
 
-    constructor(address _membershipVerifier)
-        DAOProposals(_membershipVerifier)
-    {}
+    constructor(
+        address _membershipVerifier
+    ) DAOProposals(_membershipVerifier) {}
 
     /**
      * @notice Verifies a membership proof and registers a vote.
@@ -27,23 +27,35 @@ abstract contract DAOVoting is DAOProposals, ReentrancyGuard {
     ) external override validProposal(proposalId) nonReentrant {
         IDAO.Proposal storage proposal = proposals[proposalId];
 
-        require(block.timestamp >= proposal.startTime, "DAO: Voting not started");
+        require(
+            block.timestamp >= proposal.startTime,
+            "DAO: Voting not started"
+        );
         require(block.timestamp <= proposal.endTime, "DAO: Voting ended");
         require(optionIndex < proposal.optionCount, "DAO: Invalid option");
-        require(!nullifierHashes[voteData.proof.nullifier], "DAO: Already voted");
+        require(
+            !nullifierHashes[voteData.proof.nullifier],
+            "DAO: Already voted"
+        );
 
         // Note: Message validation removed - message should be userOpHash or hash(proposalId, optionIndex, userOpHash)
         // This prevents replay attacks while allowing flexibility in proof generation
-        require(voteData.proof.scope == SCOPE, "DAO: Invalid DAO scope in proof");
+        require(
+            voteData.proof.scope == SCOPE,
+            "DAO: Invalid DAO scope in proof"
+        );
 
         // Check if the merkle root is from our history
         uint256 expectedRoot = membershipRoots[voteData.config.merkleRootIndex];
-        require(voteData.proof.merkleTreeRoot == expectedRoot && expectedRoot != 0, "DAO: Unknown membership root");
+        require(
+            voteData.proof.merkleTreeRoot == expectedRoot && expectedRoot != 0,
+            "DAO: Unknown membership root"
+        );
 
         // Validate tree depth
         require(
-            voteData.proof.merkleTreeDepth >= MIN_TREE_DEPTH && 
-            voteData.proof.merkleTreeDepth <= MAX_TREE_DEPTH,
+            voteData.proof.merkleTreeDepth >= MIN_TREE_DEPTH &&
+                voteData.proof.merkleTreeDepth <= MAX_TREE_DEPTH,
             "DAO: Invalid tree depth"
         );
 
@@ -89,7 +101,9 @@ abstract contract DAOVoting is DAOProposals, ReentrancyGuard {
 
     // --- View Functions ---
 
-    function getProposalVotes(uint256 proposalId)
+    function getProposalVotes(
+        uint256 proposalId
+    )
         public
         view
         override
@@ -111,7 +125,9 @@ abstract contract DAOVoting is DAOProposals, ReentrancyGuard {
      * @param nullifierHash The nullifier hash to check.
      * @return True if the nullifier has been used, false otherwise.
      */
-    function hasVoted(uint256 nullifierHash) public view override returns (bool) {
+    function hasVoted(
+        uint256 nullifierHash
+    ) public view override returns (bool) {
         return nullifierHashes[nullifierHash];
     }
 }

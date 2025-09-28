@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-import {InternalLeanIMT, LeanIMTData} from "@zk-kit/lean-imt.sol/InternalLeanIMT.sol";
+import {
+    InternalLeanIMT,
+    LeanIMTData
+} from "@zk-kit/lean-imt.sol/InternalLeanIMT.sol";
 import "../interfaces/IDAOState.sol";
 import "../interfaces/IVerifier.sol";
 
@@ -20,7 +23,8 @@ abstract contract DAOState is IDAOState {
     /// @inheritdoc IDAOState
     uint32 public constant MAX_TREE_DEPTH = 32;
     /// @inheritdoc IDAOState
-    uint256 public constant SNARK_SCALAR_FIELD = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
+    uint256 public constant SNARK_SCALAR_FIELD =
+        21888242871839275222246405745257275088548364400416034343698204186575808495617;
 
     /// @inheritdoc IDAOState
     uint256 public immutable SCOPE;
@@ -45,15 +49,17 @@ abstract contract DAOState is IDAOState {
         if (_membershipVerifier == address(0)) revert ZeroAddress();
 
         // Generate unique SCOPE for this DAO instance
-        SCOPE = uint256(
-            keccak256(
-                abi.encodePacked(
-                    address(this),
-                    block.chainid,
-                    block.timestamp
+        SCOPE =
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        address(this),
+                        block.chainid,
+                        block.timestamp
+                    )
                 )
-            )
-        ) % SNARK_SCALAR_FIELD;
+            ) %
+            SNARK_SCALAR_FIELD;
 
         MEMBERSHIP_VERIFIER = IVerifier(_membershipVerifier);
     }
@@ -86,15 +92,19 @@ abstract contract DAOState is IDAOState {
      * @param _identityCommitment The identity commitment to insert
      * @return _updatedRoot The new root after inserting the commitment
      */
-    function _insertMember(uint256 _identityCommitment) internal returns (uint256 _updatedRoot) {
+    function _insertMember(
+        uint256 _identityCommitment
+    ) internal returns (uint256 _updatedRoot) {
         // Validate commitment
         if (_identityCommitment == 0) revert InvalidIdentityCommitment();
-        if (_isInMembershipTree(_identityCommitment)) revert MemberAlreadyExists();
+        if (_isInMembershipTree(_identityCommitment))
+            revert MemberAlreadyExists();
 
         // Insert commitment in the tree
         _updatedRoot = _membershipTree._insert(_identityCommitment);
 
-        if (_membershipTree.depth > MAX_TREE_DEPTH) revert MaxTreeDepthReached();
+        if (_membershipTree.depth > MAX_TREE_DEPTH)
+            revert MaxTreeDepthReached();
 
         // Calculate the next index
         uint32 nextIndex = (currentRootIndex + 1) % ROOT_HISTORY_SIZE;
@@ -105,7 +115,11 @@ abstract contract DAOState is IDAOState {
         // Update currentRootIndex to point to the latest root
         currentRootIndex = nextIndex;
 
-        emit MemberAdded(_membershipTree.size, _identityCommitment, _updatedRoot);
+        emit MemberAdded(
+            _membershipTree.size,
+            _identityCommitment,
+            _updatedRoot
+        );
     }
 
     /**
@@ -115,7 +129,9 @@ abstract contract DAOState is IDAOState {
      * @param _root The root to check
      * @return Returns true if the root exists in the history, false otherwise
      */
-    function _isKnownMembershipRoot(uint256 _root) internal view returns (bool) {
+    function _isKnownMembershipRoot(
+        uint256 _root
+    ) internal view returns (bool) {
         if (_root == 0) return false;
 
         // Start from the most recent root (current index)
@@ -134,7 +150,9 @@ abstract contract DAOState is IDAOState {
      * @param _identityCommitment The commitment to check
      * @return Returns true if the commitment exists in the tree, false otherwise
      */
-    function _isInMembershipTree(uint256 _identityCommitment) internal view returns (bool) {
+    function _isInMembershipTree(
+        uint256 _identityCommitment
+    ) internal view returns (bool) {
         return _membershipTree._has(_identityCommitment);
     }
 }

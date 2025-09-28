@@ -20,9 +20,9 @@ abstract contract DAOProposals is DAOMembership {
         _;
     }
 
-    constructor(address _membershipVerifier)
-        DAOMembership(_membershipVerifier)
-    {}
+    constructor(
+        address _membershipVerifier
+    ) DAOMembership(_membershipVerifier) {}
 
     /**
      * @notice Creates a new voting proposal.
@@ -76,11 +76,9 @@ abstract contract DAOProposals is DAOMembership {
      * @notice Executes a proposal after the voting period has ended.
      * @param proposalId The ID of the proposal to execute.
      */
-    function executeProposal(uint256 proposalId)
-        external
-        override
-        validProposal(proposalId)
-    {
+    function executeProposal(
+        uint256 proposalId
+    ) external override validProposal(proposalId) {
         IDAO.Proposal storage proposal = proposals[proposalId];
 
         require(block.timestamp > proposal.endTime, "DAO: Voting still active");
@@ -93,7 +91,9 @@ abstract contract DAOProposals is DAOMembership {
 
     // --- View Functions ---
 
-    function getProposal(uint256 proposalId)
+    function getProposal(
+        uint256 proposalId
+    )
         public
         view
         override
@@ -103,13 +103,9 @@ abstract contract DAOProposals is DAOMembership {
         return proposals[proposalId];
     }
 
-    function getProposalOptions(uint256 proposalId)
-        public
-        view
-        override
-        validProposal(proposalId)
-        returns (string[] memory)
-    {
+    function getProposalOptions(
+        uint256 proposalId
+    ) public view override validProposal(proposalId) returns (string[] memory) {
         IDAO.Proposal storage proposal = proposals[proposalId];
         string[] memory options = new string[](proposal.optionCount);
 
@@ -120,7 +116,12 @@ abstract contract DAOProposals is DAOMembership {
         return options;
     }
 
-    function getActiveProposals() public view override returns (uint256[] memory) {
+    function getActiveProposals()
+        public
+        view
+        override
+        returns (uint256[] memory)
+    {
         uint256[] memory tempActiveProposals = new uint256[](proposalCount);
         uint256 activeCount = 0;
 

@@ -57,23 +57,20 @@ interface IDAO {
     function executeProposal(uint256 proposalId) external;
 
     // --- View Functions (Simplified to return the struct components) ---
-    function getProposal(uint256 proposalId)
-        external
-        view
-        returns (Proposal memory);
-    
-    function getProposalOptions(uint256 proposalId)
-        external
-        view
-        returns (string[] memory);
+    function getProposal(
+        uint256 proposalId
+    ) external view returns (Proposal memory);
 
-    function getProposalVotes(uint256 proposalId)
-        external
-        view
-        returns (uint256[] memory);
+    function getProposalOptions(
+        uint256 proposalId
+    ) external view returns (string[] memory);
+
+    function getProposalVotes(
+        uint256 proposalId
+    ) external view returns (uint256[] memory);
 
     function getActiveProposals() external view returns (uint256[] memory);
-    
+
     function isMember(address account) external view returns (bool);
     function hasVoted(uint256 nullifierHash) external view returns (bool);
 }
