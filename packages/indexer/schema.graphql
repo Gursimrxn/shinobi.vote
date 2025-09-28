@@ -1,0 +1,79 @@
+# Core DAO entities for anonymous governance
+type DAOStats @entity(immutable: false) {
+  id: ID!
+  totalProposals: BigInt!
+  totalVotes: BigInt!
+  totalMembers: BigInt!
+  activeProposals: BigInt!
+  activeVoters: BigInt!
+  lastUpdated: BigInt!
+}
+
+type Member @entity(immutable: false) {
+  id: ID! # Address
+  address: Bytes!
+  identityCommitment: BigInt!
+  joinedAt: BigInt!
+  proposalsCreated: [Proposal!]! @derivedFrom(field: "proposer")
+  votesCount: BigInt!
+}
+
+type Proposal @entity(immutable: false) {
+  id: ID! # Proposal ID
+  proposalId: BigInt!
+  title: String!
+  description: String!
+  options: [ProposalOption!]! @derivedFrom(field: "proposal")
+  startTime: BigInt!
+  endTime: BigInt!
+  executed: Boolean!
+  proposer: Member!
+  votes: [Vote!]! @derivedFrom(field: "proposal")
+  totalVotes: BigInt!
+  createdAt: BigInt!
+  executedAt: BigInt
+  status: ProposalStatus!
+}
+
+type ProposalOption @entity(immutable: true) {
+  id: ID! # proposalId-optionIndex
+  proposal: Proposal!
+  index: BigInt!
+  text: String!
+  voteCount: BigInt!
+}
+
+type Vote @entity(immutable: true) {
+  id: ID! # nullifierHash
+  proposal: Proposal!
+  optionIndex: BigInt!
+  nullifierHash: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+}
+
+enum ProposalStatus {
+  ACTIVE
+  ENDED
+  EXECUTED
+}
+
+# Analytics entities
+type DailyMetric @entity(immutable: false) {
+  id: ID! # date in YYYY-MM-DD format
+  date: String!
+  proposalsCreated: BigInt!
+  dailyVotes: BigInt!
+  membersJoined: BigInt!
+  activeProposals: BigInt!
+}
+
+type VotingActivity @entity(immutable: false) {
+  id: ID! # timestamp rounded to hour
+  hour: BigInt!
+  votes: BigInt!
+  uniqueProposals: BigInt!
+  proposalId: BigInt!
+  timestamp: BigInt!
+}
+

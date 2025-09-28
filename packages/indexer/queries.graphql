@@ -1,0 +1,213 @@
+# Get all proposals with voting data
+query GetProposals($first: Int = 20, $skip: Int = 0, $orderBy: Proposal_orderBy = createdAt, $orderDirection: OrderDirection = desc) {
+  proposals(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+    id
+    proposalId
+    title
+    description
+    startTime
+    endTime
+    executed
+    status
+    totalVotes
+    createdAt
+    proposer {
+      address
+      identityCommitment
+    }
+    options {
+      index
+      text
+      voteCount
+    }
+  }
+}
+
+# Get active proposals only
+query GetActiveProposals {
+  proposals(where: { status: ACTIVE }, orderBy: endTime, orderDirection: asc) {
+    id
+    proposalId
+    title
+    description
+    endTime
+    totalVotes
+    options {
+      index
+      text
+      voteCount
+    }
+  }
+}
+
+# Get specific proposal with full details
+query GetProposal($proposalId: String!) {
+  proposal(id: $proposalId) {
+    id
+    proposalId
+    title
+    description
+    startTime
+    endTime
+    executed
+    status
+    totalVotes
+    createdAt
+    executedAt
+    proposer {
+      address
+      identityCommitment
+      joinedAt
+    }
+    options {
+      index
+      text
+      voteCount
+    }
+    votes {
+      id
+      optionIndex
+      nullifierHash
+      timestamp
+      blockNumber
+    }
+  }
+}
+
+# Get DAO statistics
+query GetDAOStats {
+  daoStats(id: "singleton") {
+    totalProposals
+    totalVotes
+    totalMembers
+    activeProposals
+    activeVoters
+    lastUpdated
+  }
+}
+
+# Get member information
+query GetMember($address: String!) {
+  member(id: $address) {
+    address
+    identityCommitment
+    joinedAt
+    votesCount
+    proposalsCreated {
+      id
+      title
+      totalVotes
+      status
+      createdAt
+    }
+  }
+}
+
+# Get all members with participation data
+query GetMembers($first: Int = 50, $orderBy: Member_orderBy = joinedAt, $orderDirection: OrderDirection = desc) {
+  members(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+    address
+    identityCommitment
+    joinedAt
+    votesCount
+    proposalsCreated {
+      id
+      title
+      totalVotes
+    }
+  }
+}
+
+# Get voting activity for analytics
+query GetVotingActivity($first: Int = 24) {
+  votingActivities(first: $first, orderBy: timestamp, orderDirection: desc) {
+    id
+    hour
+    votes
+    uniqueProposals
+    proposalId
+    timestamp
+  }
+}
+
+# Get daily metrics for dashboard
+query GetDailyMetrics($first: Int = 30) {
+  dailyMetrics(first: $first, orderBy: date, orderDirection: desc) {
+    date
+    proposalsCreated
+    dailyVotes
+    membersJoined
+    activeProposals
+  }
+}
+
+# Get recent votes for activity feed
+query GetRecentVotes($first: Int = 20) {
+  votes(first: $first, orderBy: timestamp, orderDirection: desc) {
+    id
+    optionIndex
+    nullifierHash
+    timestamp
+    blockNumber
+    proposal {
+      id
+      title
+      options {
+        index
+        text
+      }
+    }
+  }
+}
+
+# Search proposals by title or description
+query SearchProposals($searchTerm: String!, $first: Int = 10) {
+  proposals(
+    where: { 
+      or: [
+        { title_contains_nocase: $searchTerm }
+        { description_contains_nocase: $searchTerm }
+      ]
+    }
+    first: $first
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
+    id
+    proposalId
+    title
+    description
+    status
+    totalVotes
+    createdAt
+  }
+}
+
+# Get proposal results and winner
+query GetProposalResults($proposalId: String!) {
+  proposal(id: $proposalId) {
+    id
+    title
+    status
+    totalVotes
+    options {
+      index
+      text
+      voteCount
+    }
+  }
+}
+
+
+# Analytics: Proposal success rate
+query GetProposalAnalytics {
+  proposals {
+    id
+    status
+    totalVotes
+    options {
+      voteCount
+    }
+  }
+}
+

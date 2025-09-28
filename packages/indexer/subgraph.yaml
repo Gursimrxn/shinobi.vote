@@ -1,0 +1,33 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: DAO
+    network: base-sepolia
+    source:
+      address: "0xb57095A7CaA0e2af4ec6ad0cB4a54aDC4da8a658" # Replace with deployed address
+      abi: DAO
+      startBlock: 31619602 # Replace with deployment block
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Vote
+        - Member
+        - DAOStats
+      abis:
+        - name: DAO
+          file: ./abis/DAO.json
+      eventHandlers:
+        - event: ProposalCreated(indexed uint256,string,string,string[],uint256,uint256,address)
+          handler: handleProposalCreated
+        - event: VoteCast(indexed uint256,uint256,uint256)
+          handler: handleVoteCast
+        - event: MemberAdded(indexed address,uint256)
+          handler: handleMemberAdded
+        - event: ProposalExecuted(indexed uint256)
+          handler: handleProposalExecuted
+      file: ./src/dao.ts
